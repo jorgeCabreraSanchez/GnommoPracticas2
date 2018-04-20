@@ -1,0 +1,38 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "email": {
+    "name": "email",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "SMTP",
+        "host": "smtp.gmail.com",
+        "secure": true,
+        "port": 465,
+        "auth": {
+          "user": "appPracticasGnommo@gmail.com",
+          "pass": "123patata123"
+        }
+      }
+    ]
+  },
+  "firebase": {
+    "name": "firebase",
+    "connector": "firebase",
+    "url": "https://app-pruebas-972aa.firebaseio.com/",
+    "token": "IppJAzXKQ3qB41YnicpqxuL1nSaP8ZAVmfFwszkK"
+  },
+  "mongo": {
+    "host": "192.168.1.36",
+    "port": 27017,
+    "url": "",
+    "database": "hospital",
+    "password": "",
+    "name": "mongo",
+    "user": "",
+    "connector": "mongodb"
+  }
+}

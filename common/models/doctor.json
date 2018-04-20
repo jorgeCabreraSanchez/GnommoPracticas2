@@ -1,0 +1,25 @@
+{
+  "name": "Doctor",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "hidden": [
+    "realm"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "min": 3 
+    },
+    "registerToken": {
+      "type": "string"      
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
