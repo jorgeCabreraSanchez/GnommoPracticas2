@@ -1,0 +1,9 @@
+.centrar{
+    display:flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.centrar-text{
+    text-align: center;
+}

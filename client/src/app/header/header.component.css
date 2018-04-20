@@ -1,0 +1,40 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-items-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+@media (max-width: 993px) {
+    .navbar-items-container {                                
+        text-align: center;     
+        flex-wrap: wrap;  
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-items-container {
+        max-width: 1300px;
+    }
+}
+
+.navbar-items {
+    flex-grow: 0;
+}
+
+button.navbar-toggler {
+    height: 48px;
+    outline: none;
+}
+
+h3.navbar-title {
+    font-weight: 700;
+}
+
+li.active {
+    font-weight: 700;
+}

@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <h4>Introduzca sus datos de registro</h4>
+      <label>Nombre</label>
+      <input type="text" id="name" class="form-control" formControlName="name" autofocus>
+      <p class="alert alert-danger" *ngIf="erroresForm.name">
+        {{ erroresForm.name }}
+      </p>
+      <label>Apellidos</label>
+      <input type="text" id="surname" class="form-control" formControlName="surname" autofocus>
+      <p class="alert alert-danger" *ngIf="erroresForm.surname">
+        {{ erroresForm.surname }}
+      </p>
+      <label>Correo Electrónico</label>
+      <input type="email" id="inputEmail" class="form-control" formControlName="email" required>
+      <p class="alert alert-danger" *ngIf="erroresForm.email">
+        {{ erroresForm.email }}
+      </p>
+      <!--
+      <label>Teléfono</label>
+      <input type="text" id="phone" class="form-control" formControlName="phone">
+      <p class="alert alert-danger" *ngIf="erroresForm.phone">
+        {{ erroresForm.phone }}
+      </p>
+      -->
+      <label>Contraseña</label>
+      <input type="password" id="password" class="form-control" formControlName="password" required>
+      <p class="alert alert-danger" *ngIf="erroresForm.password">
+        {{ erroresForm.password }}
+      </p>
+      <hr>
+      <button type="submit" class="btn btn-primary" [disabled]="!registerForm.valid">Registrar</button>
+      <a [routerLink]="['/']" class="btn btn-link">Cancelar</a>
+    </form>
+  </div>
+</div>

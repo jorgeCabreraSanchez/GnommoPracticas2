@@ -1,0 +1,54 @@
+input.ng-invalid {    
+    border-left: 5px solid #a94442; 
+} 
+ 
+input.ng-valid {
+    border-left: 5px solid #42A948; 
+} 
+
+/*#email{
+    border-left: 1px solid #ced4da; 
+}*/
+
+#image{
+    border-left: 1px solid #ced4da; 
+}
+
+.check {    
+    color: #42A948; 
+} 
+ 
+.uncheck {   
+    color: #a94442; 
+}
+
+.contenedor{
+    display:flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 40px;
+}
+
+p.alert{
+    margin-top: 30px;
+}
+
+.buttons{
+    display:flex;
+    justify-content: space-between;
+}
+
+input{
+    text-align: center;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 200px;
+    border: 3px solid green;
+    padding: 10px;
+}

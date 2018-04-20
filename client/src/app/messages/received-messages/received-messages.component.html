@@ -1,0 +1,95 @@
+<h3>
+  Mensajes recibidos</h3>
+<hr>
+<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllMessages">Eliminar todos los mensajes</button>
+<br>
+<br>
+<p>
+  <a [routerLink]="['']" (click)="logout()">Cerrar sesión</a>
+</p>
+<p>
+  <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
+</p>
+<br>
+<h6 class="alert alert-danger" *ngIf="messages.length ==0">No tienes mensajes</h6>
+<table *ngIf="messages.length !=0" class="table table-bordered table-striped tabla">
+  <thead>
+    <tr class="filters">
+      <th>Fecha</th>
+      <th>De</th>
+      <th>Asunto</th>
+      <th style="width: 50%">Mensaje</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let message of messages">
+      <td>{{ message.date }}</td>
+      <td>{{ message.from }}</td>
+      <td>{{ message.subject }}</td>
+      <td>{{ message.message }}</td>
+      <td>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteMessage" (click)="idEliminar(message.id)">
+          <fa name="trash"></fa>Eliminar mensaje</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+<button class="btn btn-success" [routerLink]="['/nuevo']">Nuevo mensaje</button>
+
+<!-- Modal de eliminar un mensaje -->
+<div class="modal fade" id="deleteMessage">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar acción</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        ¿Estás seguro de querer eliminar este mensaje?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="delReceivedMessage(profileId, messageId)" data-toggle="modal" data-target="#deleteMessage">
+          Confirmar
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!--Modal de eliminar todos los mensajes -->
+<div class="modal fade" id="deleteAllMessages">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar acción</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        ¿Estás seguro de querer eliminar todos los mensajes?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="delReceivedMessages(profileId)" data-toggle="modal" data-target="#deleteAllMessages">
+          Confirmar
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
