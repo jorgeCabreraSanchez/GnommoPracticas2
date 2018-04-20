@@ -20,7 +20,7 @@ module.exports = function(Doctor) {
 
   Doctor.subscribeAlerts = helperDoctor.subscribeAlerts;
 
-  Doctor.remoteMethod('subscribe-alerts', {
+  Doctor.remoteMethod('subscribeAlerts', {
 
     http: {verb: 'get'},
 
@@ -31,10 +31,10 @@ module.exports = function(Doctor) {
     returns: {arg: 'response', type: 'object', root: true},
 
   });
-
+  
   Doctor.getRolesById = helperDoctor.getRolesById;
 
-  Doctor.remoteMethod('get-roles-by-id', {
+  Doctor.remoteMethod('getRolesById', {
 
     http: {verb: 'get'},
 
