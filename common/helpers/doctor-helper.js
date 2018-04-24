@@ -4,7 +4,7 @@ module.exports = function HelperDoctor(Doctor) {
   let path = require('path');
   let loopback = require('loopback');
   let admin = require('firebase-admin');
-  let serviceAccount = require('../../credentials/app-pruebas-972aa-firebase-adminsdk-db8la-aceac291ba.json');
+  const serviceAccount = require('../../credentials/app-pruebas-972aa-firebase-adminsdk-db8la-aceac291ba.json');
   const ipFront = require('../../server/config.json').remoting.ipFront;
 
   admin.initializeApp({
@@ -87,7 +87,7 @@ module.exports = function HelperDoctor(Doctor) {
   this.sendEmailPasswordReset = (doctorInstance) => {
     var url = `http://${ipFront}:4200/new-password?access_token=${doctorInstance.accessToken.id}`;
     var myMessage = {text: url};
- 
+
     // prepare a loopback template renderer
     var renderer = loopback.template(path.resolve(__dirname, '../../server/views/reset.ejs'));
     var htmlBody = renderer(myMessage);
@@ -102,25 +102,38 @@ module.exports = function HelperDoctor(Doctor) {
       console.log('> sending password reset email to:', doctorInstance.email);
     });
   };
+
     // Find finish
+
+    // Subscribe alert
   this.subscribeAlerts = (doctorId, next) => {
-    Doctor.findById({id: doctorId}, function(err, doctorInstance) {
-      console.log(doctorInstance);
+    Doctor.findById(doctorId, (err, doctorInstance) => {
+      if (err) throw err;
+
       // This registration token comes from the client FCM SDKs.
-      var registrationToken = 'bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1...';
+      var registrationToken = doctorInstance.registrationToken;
 
-      // See the "Defining the message payload" section below for details
-      // on how to define a message payload.
-      var payload = {
-            data: {
-              score: '850',
-              time: '2:45',
-            },
-          };
+      // The topic name can be optionally prefixed with "/topics/".
+      var topic = 'highScores';
 
-      // Send a message to the device corresponding to the provided
-      // registration token.
-      admin.messaging().sendToDevice(registrationToken, payload)
+// Subscribe the device corresponding to the registration token to the
+// topic.
+      admin.messaging().subscribeToTopic(registrationToken, topic)
+        .then(function(response) {
+    // See the MessagingTopicManagementResponse reference documentation
+    // for the contents of response.
+          console.log('Successfully subscribed to topic:', response);
+        })
+        .catch(function(error) {
+          console.log('Error subscribing to topic:', error);
+        });
+
+      next(null, true);
+    });
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    admin.messaging().sendToDevice(registrationToken, payload)
             .then(function(response) {
           // See the MessagingDevicesResponse reference documentation for
           // the contents of response.
@@ -130,7 +143,7 @@ module.exports = function HelperDoctor(Doctor) {
               console.log('Error sending message:', error);
             });
 
-      next(null, true);
-    });
+    next(null, true);
   };
 };
+
