@@ -31,6 +31,20 @@ module.exports = function(Doctor) {
     returns: {arg: 'response', type: 'object', root: true},
 
   });
+
+  Doctor.unsubscribeAlerts = helperDoctor.unsubscribeAlerts;
+
+  Doctor.remoteMethod('unsubscribeAlerts', {
+
+    http: {verb: 'get'},
+
+    http: {path: '/:id/unsubscribe-alerts'},
+
+    accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
   
   Doctor.getRolesById = helperDoctor.getRolesById;
 
