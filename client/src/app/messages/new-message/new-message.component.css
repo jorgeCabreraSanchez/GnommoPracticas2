@@ -37,3 +37,33 @@ input{
 h2 {
     padding-bottom: 40px;
 }
+
+p {    
+    padding-top: 400px;     
+    padding-bottom: 400px;
+}
+
+input,textarea {
+    margin-bottom: 50px;
+}
+
+:host /deep/ .file {
+    display: inline-block;
+}
+
+:host /deep/ .file_name {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+:host /deep/ .img-thumb {
+    max-width: 200px;
+    max-height: 400px;
+}
+
+:host /deep/ .delete-btn {
+    display: inline-block;
+    margin-bottom: 100px;
+    width: 20px;
+    height: 20px;
+}

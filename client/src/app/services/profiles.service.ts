@@ -59,6 +59,13 @@ export class ProfilesService {
     return this.http.post(`http://localhost:3000/api/doctors/${userId}/upload-image`, fd, { headers });
   }
 
+  postFiles(files: any, userId: string) {
+    const fd = new FormData();
+    fd.append('file', files);
+    const headers = new HttpHeaders();
+    return this.http.post(`http://localhost:3000/api/doctors/${userId}/upload-files`, fd, { headers });
+  }
+
   createMessage(profileId: string, message: any) {
     const messageURL = 'http://localhost:3000/api/doctors/' + profileId + '/messages';
     const newmessage = JSON.stringify(message);

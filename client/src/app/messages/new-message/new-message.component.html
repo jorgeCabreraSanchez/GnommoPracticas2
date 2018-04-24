@@ -14,11 +14,16 @@
         <label for="message">Mensaje:</label>
         <textarea class="form-control" id="message" formControlName="message" rows="5"></textarea>
       </div>
+      <div class="form-group">
+        <label for="files">Archivos adjuntos:</label>
+        <input type="file" class="form-control" id="files" formControlName="files" multiple="multiple" (change)="fileChangeEvent($event)">
+      </div>
 
       <div class="buttons">
         <button class="btn btn-primary" routerLink="/recibidos">Volver</button>
         <button id="submit" class="btn btn-success" type="submit" [disabled]="!messageForm.valid">Enviar</button>
       </div>
     </form>
+    <div id="preview"></div>
   </div>
 </div>
