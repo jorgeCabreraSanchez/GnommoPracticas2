@@ -112,38 +112,53 @@ module.exports = function HelperDoctor(Doctor) {
 
       // This registration token comes from the client FCM SDKs.
       var registrationToken = doctorInstance.registrationToken;
+      var province = doctorInstance.province;
 
       // The topic name can be optionally prefixed with "/topics/".
-      var topic = 'highScores';
+      var topic = `/topics/${province}`;
 
-// Subscribe the device corresponding to the registration token to the
-// topic.
+      // Subscribe the device corresponding to the registration token to the
+      // topic.
       admin.messaging().subscribeToTopic(registrationToken, topic)
         .then(function(response) {
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
           console.log('Successfully subscribed to topic:', response);
+          next(null, response);
         })
         .catch(function(error) {
           console.log('Error subscribing to topic:', error);
+          next(error);
         });
-
-      next(null, true);
     });
+  };
 
-    // Send a message to the device corresponding to the provided
-    // registration token.
-    admin.messaging().sendToDevice(registrationToken, payload)
-            .then(function(response) {
-          // See the MessagingDevicesResponse reference documentation for
-          // the contents of response.
-              console.log('Successfully sent message:', response);
-            })
-            .catch(function(error) {
-              console.log('Error sending message:', error);
-            });
+  // Unsubscribe Alert
+  this.unsubscribeAlerts = (doctorId, next) => {
+    Doctor.findById(doctorId, (err, doctorInstance) => {
+      if (err) throw err;
 
-    next(null, true);
+      // This registration token comes from the client FCM SDKs.
+      var registrationToken = doctorInstance.registrationToken;
+      var province = doctorInstance.province;
+
+      // The topic name can be optionally prefixed with "/topics/".
+      var topic = `/topics/${province}`;
+
+      // unSubscribe the device corresponding to the registration token to the
+      // topic.
+      admin.messaging().unsubscribeToTopic(registrationToken, topic)
+        .then(function(response) {
+    // See the MessagingTopicManagementResponse reference documentation
+    // for the contents of response.
+          console.log('Successfully unsubscribed to topic:', response);
+          next(null, response);
+        })
+        .catch(function(error) {
+          console.log('Error unsubscribing to topic:', error);
+          next(error);
+        });
+    });
   };
 };
 

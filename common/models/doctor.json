@@ -20,6 +20,10 @@
     "surname": {
       "type": "string",
       "required": true
+    },
+    "province": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
