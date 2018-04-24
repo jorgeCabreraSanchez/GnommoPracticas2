@@ -107,7 +107,7 @@ export class NewMessageComponent implements OnInit {
               '<div class=\'file\'> ' +
               '<img class = \'img-thumb\' src = \'' + e.target.result + '\'/>' +
               // tslint:disable-next-line:max-line-length
-              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'component.deleteImage()\' /></a>' +
+              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'deleteFile()\' /></a>' +
               '<p class = \'file_name\'>' + file.name + '</p>' +
               '</div>'
             );
@@ -116,7 +116,7 @@ export class NewMessageComponent implements OnInit {
               '<div class=\'file\'> ' +
               '<img class = \'img-thumb\' src = \'assets/pdf.png\'/>' +
               // tslint:disable-next-line:max-line-length
-              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'component.deleteImage()\' /></a>' +
+              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'deleteFile()\' /></a>' +
               '<p class = \'file_name\'>' + file.name + '</p>' +
               '</div>'
             );
@@ -125,7 +125,7 @@ export class NewMessageComponent implements OnInit {
               '<div class=\'file\'> ' +
               '<img class = \'img-thumb\' src = \'assets/file.png\'/>' +
               // tslint:disable-next-line:max-line-length
-              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'component.deleteImage()\' /></a>' +
+              '<a class = \'delete_image\' title = \'Cancel\'><img class = \'delete-btn\' src = \'assets/button_delete.png\' (click)=\'deleteFile()\' /></a>' +
               '<p class = \'file_name\'>' + file.name + '</p>' +
               '</div>'
             );
@@ -137,7 +137,7 @@ export class NewMessageComponent implements OnInit {
     }
   }
 
-  deleteImage() {
+  deleteFile() {
     $(this).parent().remove('');
     const file = $(this).parent().attr('file');
     for (let i = 0; i < this.storedFiles.length; i++) {
