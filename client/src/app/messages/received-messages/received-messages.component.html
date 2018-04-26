@@ -19,14 +19,22 @@
       <th>De</th>
       <th>Asunto</th>
       <th style="width: 50%">Mensaje</th>
+      <th>
+        <fa name="paperclip"></fa>
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let message of messages">
       <td>{{ message.date }}</td>
       <td>{{ message.from }}</td>
-      <td>{{ message.subject }}</td>
-      <td>{{ message.message }}</td>
+      <td *ngIf="message.subject ==''">Sin asunto</td>
+      <td *ngIf="message.subject !=''">{{ message.subject }}</td>
+      <td *ngIf="message.message ==''">Sin texto de mensaje</td>
+      <td *ngIf="message.message !=''">{{ message.message }}</td>
+      <td *ngFor="let attached of message.attachments">
+        <a href="{{ attached }}"> {{ attached }}</a>
+      </td>
       <td>
         <button class="btn btn-danger" data-toggle="modal" data-target="#deleteMessage" (click)="idEliminar(message.id)">
           <fa name="trash"></fa>Eliminar mensaje</button>
@@ -64,7 +72,6 @@
     </div>
   </div>
 </div>
-
 
 <!--Modal de eliminar todos los mensajes -->
 <div class="modal fade" id="deleteAllMessages">
