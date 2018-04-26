@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ProfilesService } from '../../services/profiles.service';
+import { PushNotificationService } from 'ng-push-notification';
+
 
 @Component({
   selector: 'app-received-messages',
@@ -19,7 +21,8 @@ export class ReceivedMessagesComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private activatedRouter: ActivatedRoute,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private pushNotification: PushNotificationService) {
     this.profilesService.getReceivedMessages(JSON.parse(localStorage.getItem('currentUser')).userId)
       .subscribe(messages => {
         this.messages = this.messages;
@@ -31,7 +34,17 @@ export class ReceivedMessagesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showPush();
     this.titleService.setTitle('Mensajes recibidos');
+  }
+
+  showPush() {
+    alert('hola');
+    this.pushNotification.show(
+      'Show me that message!',
+      { icon: 'assets/bell.png'/* any settings, e.g. icon */ },
+      6000, // close delay.
+    );
   }
 
   delReceivedMessage(profileId$, MessageId$) {

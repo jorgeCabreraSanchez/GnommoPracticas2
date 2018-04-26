@@ -16,7 +16,7 @@ export class NewMessageComponent implements OnInit {
   messageForm: FormGroup;
   message: any;
   profileId: string;
-  storedFiles: any[];
+  storedFiles: any = [];
 
   constructor(private pf: FormBuilder,
     private profilesService: ProfilesService,
@@ -86,19 +86,13 @@ export class NewMessageComponent implements OnInit {
   }
 
   fileChangeEvent(fileInput: any) {
-    // Volvería a ser falso si se cambia otro campo al mismo valor que el original, por tanto lo activaremos el botón con JQuery
-    // this.validate = true;
-    const storedFiles = [];
     $('#preview').empty();
 
     for (let i = 0; i < fileInput.target.files.length; i++) {
       const readFile = new FileReader();
       const file = fileInput.target.files[i];
-      storedFiles.push(file);
-      console.log(storedFiles);
-      this.storedFiles = storedFiles;
-      // if (file.type.match('image.*')) {
-      // storedFiles.push(file);
+      this.storedFiles.push(file);
+      console.log(this.storedFiles);
       // tslint:disable-next-line:no-shadowed-variable
       readFile.onload = (function (file) {
         return function (e) {
@@ -133,6 +127,22 @@ export class NewMessageComponent implements OnInit {
         };
       })(file);
       readFile.readAsDataURL(file);
+
+      const storedFiles = this.storedFiles;
+
+      $('#preview').on('click', '.delete_image', function () {
+        // tslint:disable-next-line:no-shadowed-variable
+        const file = $(this).next().text();
+        $(this).parent().remove();
+        // console.log(file);
+        for (i = 0; i < storedFiles.length; i++) {
+          console.log(storedFiles[i].name);
+          if (storedFiles[i].name === file) {
+            storedFiles.splice(i, 1);
+            break;
+          }
+        }
+      });
       // }
     }
   }
