@@ -6,7 +6,8 @@
     "validateUpsert": true
   },
   "hidden": [
-    "realm"
+    "realm",
+    "emailVerified"
   ],
   "properties": {
     "name": {
@@ -60,7 +61,22 @@
     "principalId": "$owner",
     "permission": "ALLOW",
     "property": "subscribeAlerts"
+  },
+  {
+    "accessType": "*",
+    "principalType": "ROLE",
+    "principalId": "$authenticated",
+    "permission": "ALLOW",
+    "property": "getAlertsByProvince"
+  },
+  {
+    "accessType": "*",
+    "principalType": "ROLE",
+    "principalId": "$owner",
+    "permission": "ALLOW",
+    "property": "assignAlert"
   }
+  
 ],
   "methods": {}
 }

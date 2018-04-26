@@ -11,6 +11,7 @@ module.exports = function HelperDoctor(Doctor) {
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://app-pruebas-972aa.firebaseio.com',
   });
+  var db = admin.database();
 
   this.sendVerifyEmail = (doctorInstance, next) => {
     console.log('> send verify email');
@@ -27,7 +28,7 @@ module.exports = function HelperDoctor(Doctor) {
     };
 
     doctorInstance.verify(options, function(err, response, cb) {
-      if (err) return next(new Error(err));
+      if (err) return next(err);
 
       console.log('> verification email sent:', response);
 
@@ -74,14 +75,23 @@ module.exports = function HelperDoctor(Doctor) {
 
     let RoleMappingModel = Doctor.app.models.RoleMapping;
     RoleMappingModel.findOne({where: {principalId: doctorId}}, (err, roleMappingInstance) => {
-      if (err) return next(new Error(err));
+      if (err) return next(err);
       if (!roleMappingInstance) { return next(new Error('No role found for this doctor')); }
-
-      roleMappingInstance.remove();
       // Delete RoleMapping
-      next(null, roleMappingInstance);
-    });
+      roleMappingInstance.remove();
+
+      let AccessTokenModel = Doctor.app.models.AccessToken;
+      AccessTokenModel.findOne({where: {userId: doctorId}}, (err, accessTokenInstance) => {
+        if (err) return next(err);
+        if (!accessTokenInstance) { return next(new Error('No accessToken found for this doctor')); }
+        // Delete AccessToken
+        accessTokenInstance.remove();
+
+        next(null, next);
+        // Finish find accessToken
+      });
     // Finish find roleMapping
+    });
   };
 
   this.sendEmailPasswordReset = (doctorInstance) => {
@@ -103,62 +113,99 @@ module.exports = function HelperDoctor(Doctor) {
     });
   };
 
+  this.getAlertsByProvince = (province, next) => {
+    // firebase
+    var ref = db.ref(`Alerts/${province}`);
+    ref.once('value', function(data) {
+      next(null, data);
+    });
+  };
+
+  this.assignAlert = (id, alertId, next) => {
+    // firebase
+    Doctor.findById(id, (err, doctorInstance) => {
+      if (err) throw err;
+      if (!doctorInstance) next(new Error('Doctor don\'t found '));
+
+      var ref = db.ref(`Alerts/${doctorInstance.province}/${alertId}`);
+      ref.update({
+        'assigned': true,
+        'owner': id,
+      });
+      next(null, true);
+    });
+  };
+
+  // this.deleteAccessToken = (context, doctorInstance, next) => {
+  //   let AccessTokenModel = Doctor.app.models.AccessToken;
+  //   AccessTokenModel.findOne({where: {_id: context.args.access_token}}, (err, accessTokenInstance) => {
+  //     console.log(accessTokenInstance);
+  //     if (err) return next(new Error(err));
+  //     if (!accessTokenInstance) { return next(new Error('No accessToken found for this doctor')); }
+  //     // Delete AccessToken
+  //     accessTokenInstance.remove();
+
+  //     next(null, next);
+  //     // Finish find accessToken
+  //   });
+  // };
+
     // Find finish
 
     // Subscribe alert
-  this.subscribeAlerts = (doctorId, next) => {
-    Doctor.findById(doctorId, (err, doctorInstance) => {
-      if (err) throw err;
+  // this.subscribeAlerts = (doctorId, next) => {
+  //   Doctor.findById(doctorId, (err, doctorInstance) => {
+  //     if (err) throw err;
 
-      // This registration token comes from the client FCM SDKs.
-      var registrationToken = doctorInstance.registrationToken;
-      var province = doctorInstance.province;
+  //     // This registration token comes from the client FCM SDKs.
+  //     var registrationToken = doctorInstance.registrationToken;
+  //     var province = doctorInstance.province;
 
-      // The topic name can be optionally prefixed with "/topics/".
-      var topic = `/topics/${province}`;
+  //     // The topic name can be optionally prefixed with "/topics/".
+  //     var topic = `/topics/Madrid`;
 
-      // Subscribe the device corresponding to the registration token to the
-      // topic.
-      admin.messaging().subscribeToTopic(registrationToken, topic)
-        .then(function(response) {
-    // See the MessagingTopicManagementResponse reference documentation
-    // for the contents of response.
-          console.log('Successfully subscribed to topic:', response);
-          next(null, response);
-        })
-        .catch(function(error) {
-          console.log('Error subscribing to topic:', error);
-          next(error);
-        });
-    });
-  };
+  //     // Subscribe the device corresponding to the registration token to the
+  //     // topic.
+  //     admin.messaging().subscribeToTopic(registrationToken, topic)
+  //       .then(function(response) {
+  //   // See the MessagingTopicManagementResponse reference documentation
+  //   // for the contents of response.
+  //         console.log('Successfully subscribed to topic:', response);
+  //         next(null, response);
+  //       })
+  //       .catch(function(error) {
+  //         console.log('Error subscribing to topic:', error);
+  //         next(error);
+  //       });
+  //   });
+  // };
 
-  // Unsubscribe Alert
-  this.unsubscribeAlerts = (doctorId, next) => {
-    Doctor.findById(doctorId, (err, doctorInstance) => {
-      if (err) throw err;
+  // // Unsubscribe Alert
+  // this.unsubscribeAlerts = (doctorId, next) => {
+  //   Doctor.findById(doctorId, (err, doctorInstance) => {
+  //     if (err) throw err;
 
-      // This registration token comes from the client FCM SDKs.
-      var registrationToken = doctorInstance.registrationToken;
-      var province = doctorInstance.province;
+  //     // This registration token comes from the client FCM SDKs.
+  //     var registrationToken = doctorInstance.registrationToken;
+  //     var province = doctorInstance.province;
 
-      // The topic name can be optionally prefixed with "/topics/".
-      var topic = `/topics/${province}`;
+  //     // The topic name can be optionally prefixed with "/topics/".
+  //     var topic = `/topics/${province}`;
 
-      // unSubscribe the device corresponding to the registration token to the
-      // topic.
-      admin.messaging().unsubscribeToTopic(registrationToken, topic)
-        .then(function(response) {
-    // See the MessagingTopicManagementResponse reference documentation
-    // for the contents of response.
-          console.log('Successfully unsubscribed to topic:', response);
-          next(null, response);
-        })
-        .catch(function(error) {
-          console.log('Error unsubscribing to topic:', error);
-          next(error);
-        });
-    });
-  };
+  //     // unSubscribe the device corresponding to the registration token to the
+  //     // topic.
+  //     admin.messaging().unsubscribeToTopic(registrationToken, topic)
+  //       .then(function(response) {
+  //   // See the MessagingTopicManagementResponse reference documentation
+  //   // for the contents of response.
+  //         console.log('Successfully unsubscribed to topic:', response);
+  //         next(null, response);
+  //       })
+  //       .catch(function(error) {
+  //         console.log('Error unsubscribing to topic:', error);
+  //         next(error);
+  //       });
+  //   });
+  // };
 };
 

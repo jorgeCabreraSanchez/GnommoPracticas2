@@ -11,9 +11,9 @@ module.exports = function(app) {
 
     if (count == 0) {
       Doctor.create([
-                {username: 'Jorge', email: 'jorge.cabrera.sanchez1@gmail.com', name: 'Jorge', surname: 'Cabrera Sánchez',  password: 'j12345', emailVerified: true},
-                {username: 'Adolfo', email: 'adolfogarciaescobar@gmail.com', name: 'Adolfo', surname: 'Gargia Escobar', password: 'j12345', emailVerified: true},
-                {username: 'Antonio', email: 'patata@patata.com', password: 'j12345', name: 'Patata', surname: 'Patatin Lowren', emailVerified: true},
+                {username: 'Jorge', email: 'jorge.cabrera.sanchez1@gmail.com', name: 'Jorge', surname: 'Cabrera Sánchez',  password: 'j12345', province: 'Madrid', emailVerified: true},
+                {username: 'Adolfo', email: 'adolfogarciaescobar@gmail.com', name: 'Adolfo', surname: 'Gargia Escobar', password: 'j12345', province: 'Barcelona', emailVerified: true},
+                {username: 'Antonio', email: 'patata@patata.com', password: 'j12345', name: 'Patata', surname: 'Patatin Lowren', province: 'Madrid', emailVerified: true},
       ], function(err, doctors) {
         if (err) throw err;
         console.log('Created doctors:', doctors);
