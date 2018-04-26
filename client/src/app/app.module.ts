@@ -10,6 +10,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { FormsModule } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { PushNotificationModule } from 'ng-push-notification';
 
 import { AuthenticationService } from './services/authentication.service';
 import { ProfilesService } from './services/profiles.service';
@@ -69,7 +70,8 @@ const routes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     AngularFontAwesomeModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    PushNotificationModule.forRoot(/* Default settings here, interface PushNotificationSettings */)
   ],
   exports: [
     BsDropdownModule,
