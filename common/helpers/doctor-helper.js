@@ -118,7 +118,13 @@ module.exports = function HelperDoctor(Doctor) {
     // firebase
     var ref = db.ref(`Alerts/${province}`);
     ref.once('value', function(data) {
-      next(null, data);
+      var arrayAlerts = [];
+      for (var i in data.exportVal()) {
+        var alert = data.exportVal()[i];
+        alert['id'] = i;
+        arrayAlerts.push(alert);
+      }
+      next(null, arrayAlerts);
     });
   };
 
