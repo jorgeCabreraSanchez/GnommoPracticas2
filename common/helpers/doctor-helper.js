@@ -115,7 +115,7 @@ module.exports = function HelperDoctor(Doctor) {
 
   this.getAlertsByProvince = (province, next) => {
     // firebase
-    var ref = db.ref(`Alerts/${province}`);
+    var ref = db.ref(`${province}/Alerts`);
     ref.once('value', function(data) {
       next(null, data);
     });
@@ -127,7 +127,7 @@ module.exports = function HelperDoctor(Doctor) {
       if (err) throw err;
       if (!doctorInstance) next(new Error('Doctor don\'t found '));
 
-      var ref = db.ref(`Alerts/${doctorInstance.province}/${alertId}`);
+      var ref = db.ref(`${doctorInstance.province}/Alerts/${alertId}`);
       ref.update({
         'assigned': true,
         'owner': id,
