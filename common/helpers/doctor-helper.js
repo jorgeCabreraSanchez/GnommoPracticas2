@@ -95,7 +95,8 @@ module.exports = function HelperDoctor(Doctor) {
   };
 
   this.sendEmailPasswordReset = (doctorInstance) => {
-    var url = `http://${ipFront}:4200/new-password?access_token=${doctorInstance.accessToken.id}`;
+    console.log(doctorInstance);
+    var url = `http://${ipFront}/new-password?access_token=${doctorInstance.accessToken.id}`;
     var myMessage = {text: url};
 
     // prepare a loopback template renderer
@@ -115,7 +116,7 @@ module.exports = function HelperDoctor(Doctor) {
 
   this.getAlertsByProvince = (province, next) => {
     // firebase
-    var ref = db.ref(`${province}`);
+    var ref = db.ref(`Alerts/${province}`);
     ref.once('value', function(data) {
       next(null, data);
     });
@@ -127,7 +128,7 @@ module.exports = function HelperDoctor(Doctor) {
       if (err) throw err;
       if (!doctorInstance) next(new Error('Doctor don\'t found '));
 
-      var ref = db.ref(`${doctorInstance.province}/Alerts/${alertId}`);
+      var ref = db.ref(`Alerts/${doctorInstance.province}/${alertId}`);
       ref.update({
         'assigned': true,
         'owner': id,
