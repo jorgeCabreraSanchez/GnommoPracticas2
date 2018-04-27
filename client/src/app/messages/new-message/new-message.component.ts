@@ -87,12 +87,13 @@ export class NewMessageComponent implements OnInit {
 
   fileChangeEvent(fileInput: any) {
     $('#preview').empty();
+    this.storedFiles = [];
 
     for (let i = 0; i < fileInput.target.files.length; i++) {
       const readFile = new FileReader();
       const file = fileInput.target.files[i];
       this.storedFiles.push(file);
-      console.log(this.storedFiles);
+      // console.log(this.storedFiles);
       // tslint:disable-next-line:no-shadowed-variable
       readFile.onload = (function (file) {
         return function (e) {
@@ -128,33 +129,20 @@ export class NewMessageComponent implements OnInit {
       })(file);
       readFile.readAsDataURL(file);
 
-      const storedFiles = this.storedFiles;
+      const self = this;
 
       $('#preview').on('click', '.delete_image', function () {
         // tslint:disable-next-line:no-shadowed-variable
         const file = $(this).next().text();
         $(this).parent().remove();
         // console.log(file);
-        for (i = 0; i < storedFiles.length; i++) {
-          console.log(storedFiles[i].name);
-          if (storedFiles[i].name === file) {
-            storedFiles.splice(i, 1);
+        for (i = 0; i < self.storedFiles.length; i++) {
+          if (self.storedFiles[i].name === file) {
+            self.storedFiles.splice(i, 1);
             break;
           }
         }
       });
-      // }
-    }
-  }
-
-  deleteFile() {
-    $(this).parent().remove('');
-    const file = $(this).parent().attr('file');
-    for (let i = 0; i < this.storedFiles.length; i++) {
-      if (this.storedFiles[i].name === file) {
-        this.storedFiles.splice(i, 1);
-        break;
-      }
     }
   }
 
