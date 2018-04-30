@@ -3,8 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ProfilesService } from '../../services/profiles.service';
-import { PushNotificationService } from 'ng-push-notification';
+// import { PushNotificationService } from 'ng-push-notification';
+import * as firebase from 'firebase';
 
+import 'rxjs/add/operator/take';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-received-messages',
@@ -16,35 +19,55 @@ export class ReceivedMessagesComponent implements OnInit {
   messages: any = [];
   profileId: string;
   messageId: string;
+  currentMessage = new BehaviorSubject(null);
+
 
   constructor(private profilesService: ProfilesService,
     private titleService: Title,
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private authenticationService: AuthenticationService,
-    private pushNotification: PushNotificationService) {
-    this.profilesService.getReceivedMessages(JSON.parse(localStorage.getItem('currentUser')).userId)
+    /*private pushNotification: PushNotificationService*/) {
+    setInterval(this.profilesService.getReceivedMessages(JSON.parse(localStorage.getItem('currentUser')).userId)
       .subscribe(messages => {
         this.messages = this.messages;
       },
         error => {
           console.log(error);
           // this.router.navigate(['recibidos']);
-        });
+        })
+      , 5000);
   }
 
   ngOnInit() {
-    this.showPush();
     this.titleService.setTitle('Mensajes recibidos');
-  }
 
-  showPush() {
-    alert('hola');
-    this.pushNotification.show(
-      'Show me that message!',
-      { icon: 'assets/bell.png'/* any settings, e.g. icon */ },
-      6000, // close delay.
-    );
+    // Initialize Firebase
+    // TODO: Replace with your project's customized code snippet
+    const config = {
+      apiKey: 'AIzaSyBhNntcL5UgZZ0hPwsFDkoYBmZea0PJqFY',
+      authDomain: 'app-pruebas-972aa.firebaseapp.com',
+      databaseURL: 'https://app-pruebas-972aa.firebaseio.com',
+      projectId: 'app-pruebas-972aa',
+      storageBucket: 'app-pruebas-972aa.appspot.com',
+      messagingSenderId: '271450768634'
+    };
+    firebase.initializeApp(config);
+
+    const messaging = firebase.messaging();
+    messaging.requestPermission().then(function () {
+      console.log('Notification permission granted.');
+      // TODO(developer): Retrieve an Instance ID token for use with FCM.
+      // ...
+    }).catch(function (err) {
+      console.log('Unable to get permission to notify.', err);
+    });
+
+    messaging.onMessage((payload) => {
+      console.log('Message received. ', payload);
+      this.currentMessage.next(payload);
+    });
+
   }
 
   delReceivedMessage(profileId$, MessageId$) {
