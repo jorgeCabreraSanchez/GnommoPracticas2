@@ -12,7 +12,6 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PushNotificationModule } from 'ng-push-notification';
 
-
 import { AuthenticationService } from './services/authentication.service';
 import { ProfilesService } from './services/profiles.service';
 import { AlertService } from './services/alert.service';
