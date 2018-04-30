@@ -95,7 +95,8 @@ module.exports = function HelperDoctor(Doctor) {
   };
 
   this.sendEmailPasswordReset = (doctorInstance) => {
-    var url = `http://${ipFront}:4200/new-password?access_token=${doctorInstance.accessToken.id}`;
+    console.log(doctorInstance);
+    var url = `http://${ipFront}/new-password?access_token=${doctorInstance.accessToken.id}`;
     var myMessage = {text: url};
 
     // prepare a loopback template renderer
@@ -117,7 +118,13 @@ module.exports = function HelperDoctor(Doctor) {
     // firebase
     var ref = db.ref(`Alerts/${province}`);
     ref.once('value', function(data) {
-      next(null, data);
+      var arrayAlerts = [];
+      for (var i in data.exportVal()) {
+        var alert = data.exportVal()[i];
+        alert['id'] = i;
+        arrayAlerts.push(alert);
+      }
+      next(null, arrayAlerts);
     });
   };
 
