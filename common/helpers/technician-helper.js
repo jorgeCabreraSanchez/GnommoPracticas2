@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function HelperDoctor(Doctor) {
+module.exports = function HelperTechnician(Technician) {
   let path = require('path');
   let loopback = require('loopback');
   let admin = require('firebase-admin');
@@ -13,37 +13,37 @@ module.exports = function HelperDoctor(Doctor) {
   });
   var db = admin.database();
 
-  this.sendVerifyEmail = (doctorInstance, next) => {
+  this.sendVerifyEmail = (technicianInstance, next) => {
     console.log('> send verify email');
 
     let options = {
       type: 'email',
-      to: doctorInstance.email,
+      to: technicianInstance.email,
       from: 'apppracticasgnommo@gmail.com',
       subject: 'Thanks for registering.',
       template: path.resolve(__dirname, '../../server/views/verify.ejs'),
       redirect: 'http://localhost:4200',
-      user: doctorInstance,
+      user: technicianInstance,
       text: '{href}',
     };
 
-    doctorInstance.verify(options, function(err, response, cb) {
+    technicianInstance.verify(options, function(err, response, cb) {
       if (err) return next(err);
 
       console.log('> verification email sent:', response);
 
-      let RoleMappingModel = Doctor.app.models.RoleMapping;
-      let RoleModel = Doctor.app.models.Role;
+      let RoleMappingModel = Technician.app.models.RoleMapping;
+      let RoleModel = Technician.app.models.Role;
 
       RoleModel.findOne({where: {name: 'normal'}}, (err, role) => {
         if (err) return next(new Error(err));
         role.principals.create({
           principalType: RoleMappingModel.USER,
-          principalId: doctorInstance.id,
+          principalId: technicianInstance.id,
           roleId: role.id,
         }, function(err, principal) {
           if (err) return next(new Error(err));
-          console.log(`Assigned user ${doctorInstance.id} to role:`, role.name);
+          console.log(`Assigned user ${technicianInstance.id} to role:`, role.name);
           return next(null, response);
         });
       });
@@ -53,37 +53,37 @@ module.exports = function HelperDoctor(Doctor) {
   };
 
   this.getRolesById = (id, next) => {
-    Doctor.findById(id, (err, persisteddoctor) => {
+    Technician.findById(id, (err, persistedtechnician) => {
       if (err) return next(new Error(err));
-      let RoleMappingModel = Doctor.app.models.RoleMapping;
-      let RoleModel = Doctor.app.models.Role;
+      let RoleMappingModel = Technician.app.models.RoleMapping;
+      let RoleModel = Technician.app.models.Role;
 
       RoleMappingModel.findOne({where: {principalId: id}}, (err, role) => {
         if (err) return next(new Error(err));
-        if (!role) { return next(new Error('No role found for this doctor')); }
+        if (!role) { return next(new Error('No role found for this technician')); }
 
-        RoleModel.findOne({where: {id: role.roleId}}, (err, doctorRoles) => {
+        RoleModel.findOne({where: {id: role.roleId}}, (err, technicianRoles) => {
           if (err) return next(new Error(err));
-          return next(null, doctorRoles);
+          return next(null, technicianRoles);
         });
       });
     });
   };
 
   this.deleteOnCascade = (ctx, next) => {
-    const doctorId = ctx.where.id.inq[0];
+    const technicianId = ctx.where.id.inq[0];
 
-    let RoleMappingModel = Doctor.app.models.RoleMapping;
-    RoleMappingModel.findOne({where: {principalId: doctorId}}, (err, roleMappingInstance) => {
+    let RoleMappingModel = Technician.app.models.RoleMapping;
+    RoleMappingModel.findOne({where: {principalId: technicianId}}, (err, roleMappingInstance) => {
       if (err) return next(err);
-      if (!roleMappingInstance) { return next(new Error('No role found for this doctor')); }
+      if (!roleMappingInstance) { return next(new Error('No role found for this technician')); }
       // Delete RoleMapping
       roleMappingInstance.remove();
 
-      let AccessTokenModel = Doctor.app.models.AccessToken;
-      AccessTokenModel.findOne({where: {userId: doctorId}}, (err, accessTokenInstance) => {
+      let AccessTokenModel = Technician.app.models.AccessToken;
+      AccessTokenModel.findOne({where: {userId: technicianId}}, (err, accessTokenInstance) => {
         if (err) return next(err);
-        if (!accessTokenInstance) { return next(new Error('No accessToken found for this doctor')); }
+        if (!accessTokenInstance) { return next(new Error('No accessToken found for this technician')); }
         // Delete AccessToken
         accessTokenInstance.remove();
 
@@ -94,23 +94,23 @@ module.exports = function HelperDoctor(Doctor) {
     });
   };
 
-  this.sendEmailPasswordReset = (doctorInstance) => {
-    console.log(doctorInstance);
-    var url = `http://${ipFront}/new-password?access_token=${doctorInstance.accessToken.id}`;
+  this.sendEmailPasswordReset = (technicianInstance) => {
+    console.log(technicianInstance);
+    var url = `http://${ipFront}/new-password?access_token=${technicianInstance.accessToken.id}`;
     var myMessage = {text: url};
 
     // prepare a loopback template renderer
     var renderer = loopback.template(path.resolve(__dirname, '../../server/views/reset.ejs'));
     var htmlBody = renderer(myMessage);
     // 'here' in above html is linked to : 'http://<host:port>/reset-password?access_token=<short-lived/temporary access token>'
-    Doctor.app.models.Email.send({
-      to: doctorInstance.email,
+    Technician.app.models.Email.send({
+      to: technicianInstance.email,
       from: 'apppracticasgnommo@gmail.com',
       subject: 'Password reset',
       html: htmlBody,
     }, function(err) {
       if (err) return console.log(err);
-      console.log('> sending password reset email to:', doctorInstance.email);
+      console.log('> sending password reset email to:', technicianInstance.email);
     });
   };
 
@@ -130,11 +130,11 @@ module.exports = function HelperDoctor(Doctor) {
 
   this.assignAlert = (id, alertId, next) => {
     // firebase
-    Doctor.findById(id, (err, doctorInstance) => {
+    Technician.findById(id, (err, technicianInstance) => {
       if (err) throw err;
-      if (!doctorInstance) next(new Error('Doctor don\'t found '));
+      if (!technicianInstance) next(new Error('Technician don\'t found '));
 
-      var ref = db.ref(`Alerts/${doctorInstance.province}/${alertId}`);
+      var ref = db.ref(`Alerts/${technicianInstance.province}/${alertId}`);
       ref.update({
         'assigned': true,
         'owner': id,
@@ -143,12 +143,12 @@ module.exports = function HelperDoctor(Doctor) {
     });
   };
 
-  // this.deleteAccessToken = (context, doctorInstance, next) => {
-  //   let AccessTokenModel = Doctor.app.models.AccessToken;
+  // this.deleteAccessToken = (context, technicianInstance, next) => {
+  //   let AccessTokenModel = Technician.app.models.AccessToken;
   //   AccessTokenModel.findOne({where: {_id: context.args.access_token}}, (err, accessTokenInstance) => {
   //     console.log(accessTokenInstance);
   //     if (err) return next(new Error(err));
-  //     if (!accessTokenInstance) { return next(new Error('No accessToken found for this doctor')); }
+  //     if (!accessTokenInstance) { return next(new Error('No accessToken found for this technician')); }
   //     // Delete AccessToken
   //     accessTokenInstance.remove();
 
@@ -160,13 +160,13 @@ module.exports = function HelperDoctor(Doctor) {
     // Find finish
 
     // Subscribe alert
-  // this.subscribeAlerts = (doctorId, next) => {
-  //   Doctor.findById(doctorId, (err, doctorInstance) => {
+  // this.subscribeAlerts = (technicianId, next) => {
+  //   Technician.findById(technicianId, (err, technicianInstance) => {
   //     if (err) throw err;
 
   //     // This registration token comes from the client FCM SDKs.
-  //     var registrationToken = doctorInstance.registrationToken;
-  //     var province = doctorInstance.province;
+  //     var registrationToken = technicianInstance.registrationToken;
+  //     var province = technicianInstance.province;
 
   //     // The topic name can be optionally prefixed with "/topics/".
   //     var topic = `/topics/Madrid`;
@@ -188,13 +188,13 @@ module.exports = function HelperDoctor(Doctor) {
   // };
 
   // // Unsubscribe Alert
-  // this.unsubscribeAlerts = (doctorId, next) => {
-  //   Doctor.findById(doctorId, (err, doctorInstance) => {
+  // this.unsubscribeAlerts = (technicianId, next) => {
+  //   Technician.findById(technicianId, (err, technicianInstance) => {
   //     if (err) throw err;
 
   //     // This registration token comes from the client FCM SDKs.
-  //     var registrationToken = doctorInstance.registrationToken;
-  //     var province = doctorInstance.province;
+  //     var registrationToken = technicianInstance.registrationToken;
+  //     var province = technicianInstance.province;
 
   //     // The topic name can be optionally prefixed with "/topics/".
   //     var topic = `/topics/${province}`;

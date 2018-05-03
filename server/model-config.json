@@ -39,7 +39,11 @@
     "dataSource": "email",
     "public": false
   },
-  "Doctor": {
+  "Alert": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Technician": {
     "dataSource": "mongo",
     "public": true
   }
