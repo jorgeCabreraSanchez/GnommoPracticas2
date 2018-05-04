@@ -7,11 +7,18 @@ module.exports = function HelperTechnician(Technician) {
   const serviceAccount = require('../../credentials/app-pruebas-972aa-firebase-adminsdk-db8la-aceac291ba.json');
   const ipFront = require('../../server/config.json').remoting.ipFront;
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://app-pruebas-972aa.firebaseio.com',
-  });
-  var db = admin.database();
+  // Technician.observe('loaded', function(ctx, next) {
+  //   Alert = Technician.app.models.Alert;    // works!
+  //   next(null, true);
+  // });
+  if (!admin) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: 'https://app-pruebas-972aa.firebaseio.com',
+    });
+  }
+
+  // var db = admin.database();
 
   this.sendVerifyEmail = (technicianInstance, next) => {
     console.log('> send verify email');
@@ -114,33 +121,30 @@ module.exports = function HelperTechnician(Technician) {
     });
   };
 
-  this.getAlertsByProvince = (province, next) => {
-    // firebase
-    var ref = db.ref(`Alerts/${province}`);
-    ref.once('value', function(data) {
-      var arrayAlerts = [];
-      for (var i in data.exportVal()) {
-        var alert = data.exportVal()[i];
-        alert['id'] = i;
-        arrayAlerts.push(alert);
-      }
-      next(null, arrayAlerts);
+  this.getAlertsByOwnerProvince = (id, next) => {
+    const {Alert} = Technician.app.models;
+    Technician.findById(id, function(err, technicianInstance) {
+      if (err) next(err);
+      Alert.find({province: technicianInstance.province}, function(err, alerts) {
+        if (err) next(err);
+        next(null, alerts);
+      });
     });
   };
 
   this.assignAlert = (id, alertId, next) => {
-    // firebase
-    Technician.findById(id, (err, technicianInstance) => {
-      if (err) throw err;
-      if (!technicianInstance) next(new Error('Technician don\'t found '));
-
-      var ref = db.ref(`Alerts/${technicianInstance.province}/${alertId}`);
-      ref.update({
-        'assigned': true,
-        'owner': id,
+    const {Alert} = Technician.app.models;
+    Alert.findById(alertId, function(err, alertInstance) {
+      if (err) next(err);
+      alertInstance.updateAttributes({owner: id, assigned: true, state: 'unfinished'}, function(err, instance) {
+        if (err) next(err);
+        next(null, instance);
       });
-      next(null, true);
     });
+  };
+
+  this.generateNotificationForProvince = (province, next) => {
+
   };
 
   // this.deleteAccessToken = (context, technicianInstance, next) => {

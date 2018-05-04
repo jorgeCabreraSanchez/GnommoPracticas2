@@ -8,16 +8,18 @@
   "hidden": [
     "owner",
     "finished",
-    "note"
+    "note",
+    "TechnicianId",
+    "date",
+    "state",
+    "assigned"
   ],
   "properties": {
     "assigned": {
-      "type": "boolean",
-      "required": true
+      "type": "boolean"      
     },
     "date": {
-      "type": "number",
-      "required": true
+      "type": "number"      
     },
     "title": {
       "type": "string",
@@ -27,11 +29,15 @@
       "type": "string",
       "required": true
     },
+    "province": {
+      "type": "string",
+      "required": true
+    },
     "owner": {
       "type": "string"
     },
-    "finished": {
-      "type": "boolean"
+    "state": {
+      "type": "string"      
     },
     "note": {
       "type": "string"
@@ -51,6 +57,13 @@
       "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "closeAlert"
     }
   ],
   "methods": {}

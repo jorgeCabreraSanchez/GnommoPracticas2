@@ -4,7 +4,7 @@ module.exports = function(app) {
   var Technician = app.models.Technician;
   var Role = app.models.Role;
   var RoleMapping = app.models.RoleMapping;
-  var accesToken = app.models.AccessToken;
+  var AccesToken = app.models.AccessToken;
 
   Technician.count({}, function(err, count) {
         // A: The datastore produced an error! Pass error to callback
@@ -18,13 +18,6 @@ module.exports = function(app) {
       ], function(err, technicians) {
         if (err) throw err;
         console.log('Created technicians:', technicians);
-
-        // create infinite token
-        accesToken.create({
-          id: 'kkk',
-          userId: technicians[0].id,
-          ttl: 60 * 60 * 24 * 364 * 10,
-        });
 
         // create the admin role
         Role.create({

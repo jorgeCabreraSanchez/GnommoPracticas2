@@ -19,66 +19,10 @@ module.exports = function(Technician) {
     helperTechnician.deleteOnCascade(ctx, next); // Delete technicianBook when this technician is in it
   });
 
-  Technician.on('resetPasswordRequest', function(technicianInstance) {
+  Technician.on('resetPasswordRequest', function(technicianInstance) { // next?, maybe add?
     helperTechnician.sendEmailPasswordReset(technicianInstance);
   });
 
-  Technician.getAlertsByProvince = helperTechnician.getAlertsByProvince;
-
-  Technician.remoteMethod('getAlertsByProvince', {
-
-    http: {verb: 'get'},
-
-    http: {path: '/get-alerts-by-province/:province'},
-
-    accepts: {arg: 'province', type: 'string', http: {source: 'path'}},
-
-    returns: {arg: 'response', type: 'object', root: true},
-
-  });
-
-  Technician.assignAlert = helperTechnician.assignAlert;
-
-  Technician.remoteMethod('assignAlert', {
-
-    http: {verb: 'get'},
-
-    http: {path: '/:id/assign-alert/:alertId'},
-
-    accepts: [{arg: 'id', type: 'string', http: {source: 'path'}},
-                {arg: 'alertId', type: 'string', http: {source: 'path'}}],
-
-    returns: {arg: 'response', type: 'object', root: true},
-
-  });
-
-    // Technician.subscribeAlerts = helperTechnician.subscribeAlerts;
-
-    // Technician.remoteMethod('subscribeAlerts', {
-
-    //   http: {verb: 'get'},
-
-    //   http: {path: '/:id/subscribe-alerts'},
-
-    //   accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
-
-    //   returns: {arg: 'response', type: 'object', root: true},
-
-    // });
-
-    // Technician.unsubscribeAlerts = helperTechnician.unsubscribeAlerts;
-
-    // Technician.remoteMethod('unsubscribeAlerts', {
-
-    //   http: {verb: 'get'},
-
-    //   http: {path: '/:id/unsubscribe-alerts'},
-
-    //   accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
-
-    //   returns: {arg: 'response', type: 'object', root: true},
-
-    // });
   Technician.getRolesById = helperTechnician.getRolesById;
 
   Technician.remoteMethod('getRolesById', {
@@ -88,6 +32,52 @@ module.exports = function(Technician) {
     http: {path: '/:id/get-roles-by-id'},
 
     accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
+
+  Technician.getAlertsByOwnerProvince = helperTechnician.getAlertsByOwnerProvince;
+
+  Technician.remoteMethod('getAlertsByOwnerProvince', {
+
+    http: {verb: 'get'},
+
+    http: {path: '/:id/get-alerts-by-owner-province'},
+
+    accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
+
+  Technician.assignAlert = helperTechnician.assignAlert;
+
+  Technician.remoteMethod('assignAlert', {
+
+    http: {verb: 'post'},
+
+    http: {path: '/:id/assign-alert/:alertId'},
+
+    accepts: [{arg: 'id', type: 'string', http: {source: 'path'}},
+              {arg: 'alertId', type: 'string', http: {source: 'path'}}],
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
+
+  Technician.generateNotificationForProvince = helperTechnician.generateNotificationForProvince;
+
+  Technician.remoteMethod('generateNotificationForProvince', {
+
+    http: {verb: 'post'},
+
+    http: {path: '/generate-notification-for-province/:province'},
+
+    accepts: [
+      {arg: 'province', type: 'string', http: {source: 'path'}},
+      {arg: 'title', type: 'Object', http: {source: 'body'}},
+    ],
 
     returns: {arg: 'response', type: 'object', root: true},
 
