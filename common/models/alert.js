@@ -5,16 +5,16 @@ module.exports = function(Alert) {
   const HelperAlert = require('../helpers/alert-helper');
   const helperAlert = new HelperAlert(Alert);
 
-  Alert.beforeRemote('create', function(ctx, alertInstance, next) {
-    console.log(ctx.result);
-    alertInstance.date = Date.now();
-    alertInstance.state = 'unfinished';
-    alertInstance.assigned = false;
-    // ctx.result.save(next);
-    next(null, alertInstance);
+  Alert.beforeRemote('create', function(ctx, alertInstance, next) {    
+    ctx.args.data.date = Date.now();
+    ctx.args.data.state = 'unfinished';
+    ctx.args.data.assigned = false;
+    // ctx.args.data.save(next);
+    next(null, ctx.args.data);
   });
 
   Alert.afterRemote('create', function(context, alertInstance, next) {
+    // console.log(context);
     helperAlert.sendNotification(alertInstance, next);
   });
 

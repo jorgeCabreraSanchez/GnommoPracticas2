@@ -16,10 +16,12 @@
   ],
   "properties": {
     "assigned": {
-      "type": "boolean"      
+      "type": "boolean",
+      "required": true
     },
     "date": {
-      "type": "number"      
+      "type": "number",
+      "required": true   
     },
     "title": {
       "type": "string",
@@ -37,7 +39,8 @@
       "type": "string"
     },
     "state": {
-      "type": "string"      
+      "type": "string",
+      "required": true       
     },
     "note": {
       "type": "string"
