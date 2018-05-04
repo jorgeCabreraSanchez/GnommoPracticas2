@@ -73,8 +73,21 @@ export class ProfilesService {
     return this.http.post(messageURL, newmessage, { headers });
   }
 
-  getReceivedMessages(profileId: string) {
-    const url = 'http://localhost:3000/api/doctors/' + profileId + '/received-messages';
+  assignAlert(profileId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/Doctors/' + profileId + 'assign-alert/' + alertId;
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(url, { headers });
+  }
+
+  unassignAlert(profileId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/Doctors/' + profileId + 'assign-alert/' + alertId;
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(url, { headers });
+  }
+
+  getReceivedMessages(province: string) {
+    // const url = 'http://localhost:3000/api/doctors/' + profileId + '/received-messages';
+    const url = 'http://localhost:3000/api/Doctors/get-alerts-by-province/' + province;
     return this.http.get(url);
   }
 

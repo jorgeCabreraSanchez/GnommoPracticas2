@@ -12,6 +12,11 @@
       <p class="alert alert-danger" *ngIf="erroresForm.surname">
         {{ erroresForm.surname }}
       </p>
+      <label>Provincia</label>
+      <select id="province" class="form-control" formControlName="province">
+        <option value="madrid">Madrid</option>
+        <option value="barcelona">Barcelona</option>
+      </select>
       <label>Correo Electrónico</label>
       <input type="email" id="inputEmail" class="form-control" formControlName="email" required>
       <p class="alert alert-danger" *ngIf="erroresForm.email">
