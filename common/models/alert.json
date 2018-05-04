@@ -6,13 +6,6 @@
     "validateUpsert": true
   },
   "hidden": [
-    "owner",
-    "finished",
-    "note",
-    "TechnicianId",
-    "date",
-    "state",
-    "assigned"
   ],
   "properties": {
     "assigned": {
