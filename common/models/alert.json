@@ -5,8 +5,7 @@
   "options": {
     "validateUpsert": true
   },
-  "hidden": [
-  ],
+  "hidden": [],
   "properties": {
     "assigned": {
       "type": "boolean",
@@ -14,7 +13,7 @@
     },
     "date": {
       "type": "number",
-      "required": true   
+      "required": true
     },
     "title": {
       "type": "string",
@@ -33,7 +32,7 @@
     },
     "state": {
       "type": "string",
-      "required": true       
+      "required": true
     },
     "note": {
       "type": "string"
@@ -60,6 +59,13 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "closeAlert"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "hospitalUser",
+      "permission": "ALLOW",
+      "property": "create"
     }
   ],
   "methods": {}

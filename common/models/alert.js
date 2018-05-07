@@ -11,7 +11,8 @@ module.exports = function(Alert) {
     ctx.args.data.date = Date.now();
     ctx.args.data.state = 'unfinished';
     ctx.args.data.assigned = false;
-    if (!provinces.includes(alertInstance.province)) next('Esa provincia no esta recogida');
+    ctx.args.data.province = ctx.args.data.province.charAt(0).toUpperCase().concat(ctx.args.data.province.substring(1));
+    if (!provinces.includes(ctx.args.data.province)) next('Esa provincia no esta recogida');
     next(null, ctx.args.data);
   });
 

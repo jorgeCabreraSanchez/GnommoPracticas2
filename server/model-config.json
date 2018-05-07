@@ -44,7 +44,7 @@
     "dataSource": "mongo",
     "public": true
   },
-  "Technician": {
+  "AppUser": {
     "dataSource": "mongo",
     "public": true
   }

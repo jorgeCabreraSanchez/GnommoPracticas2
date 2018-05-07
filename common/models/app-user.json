@@ -1,5 +1,5 @@
 {
-  "name": "Technician",
+  "name": "AppUser",
   "base": "User",
   "idInjection": true,
   "options": {
@@ -61,7 +61,7 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "getAlertsByProvince"
+      "property": "getAlertsByOwnerProvince"
     },
     {
       "accessType": "*",
