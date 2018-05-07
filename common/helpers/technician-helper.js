@@ -125,7 +125,7 @@ module.exports = function HelperTechnician(Technician) {
     const {Alert} = Technician.app.models;
     Technician.findById(id, function(err, technicianInstance) {
       if (err) next(err);
-      Alert.find({'province': technicianInstance.province}, function(err, alerts) {
+      Alert.find({where: {'province': technicianInstance.province}}, function(err, alerts) {
         if (err) next(err);
         next(null, alerts);
       });

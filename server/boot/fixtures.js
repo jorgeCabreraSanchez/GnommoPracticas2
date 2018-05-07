@@ -26,19 +26,32 @@ module.exports = function(app) {
           if (err) throw err;
           console.log('Created role:', role);
                     // make Jorge an admin
-          for (let i = 0; i <= 1; i++) {
-            role.principals.create({
-              principalType: RoleMapping.USER,
-              principalId: technicians[i].id,
-              roleId: role.id,
-            }, function(err, principal) {
-              if (err) throw err;
-              console.log(`Assigned user ${technicians[i].id} to role:`, role);
-            });
-          }
+          role.principals.create({
+            principalType: RoleMapping.USER,
+            principalId: technicians[0].id,
+            roleId: role.id,
+          }, function(err, principal) {
+            if (err) throw err;
+            console.log(`Assigned user ${technicians[0].id} to role:`, role);
+          });
         });
         Role.create({
-          name: 'normal',
+          name: 'hospital',
+        }, function(err, role) {
+          if (err) throw err;
+          console.log('Created role:', role);
+                    // make Jorge an admin
+          role.principals.create({
+            principalType: RoleMapping.USER,
+            principalId: technicians[1].id,
+            roleId: role.id,
+          }, function(err, principal) {
+            if (err) throw err;
+            console.log(`Assigned user ${technicians[1].id} to role:`, role);
+          });
+        });
+        Role.create({
+          name: 'technician',
         }, function(err, role) {
           if (err) throw err;
           console.log('Created role:', role);
