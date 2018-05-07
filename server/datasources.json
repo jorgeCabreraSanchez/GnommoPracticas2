@@ -20,9 +20,9 @@
     ]
   },
   "firebase": {
+    "url": "https://app-pruebas-972aa.firebaseio.com/",
     "name": "firebase",
     "connector": "firebase",
-    "url": "https://app-pruebas-972aa.firebaseio.com/",
     "token": "IppJAzXKQ3qB41YnicpqxuL1nSaP8ZAVmfFwszkK"
   },
   "mongo": {
