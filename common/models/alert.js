@@ -5,11 +5,14 @@ module.exports = function(Alert) {
   const HelperAlert = require('../helpers/alert-helper');
   const helperAlert = new HelperAlert(Alert);
 
-  Alert.beforeRemote('create', function(ctx, alertInstance, next) {    
+  const provinces = ['Madrid', 'Barcelona'];
+
+  Alert.beforeRemote('create', function(ctx, alertInstance, next) {
     ctx.args.data.date = Date.now();
     ctx.args.data.state = 'unfinished';
     ctx.args.data.assigned = false;
-    // ctx.args.data.save(next);
+    ctx.args.data.province = ctx.args.data.province.charAt(0).toUpperCase().concat(ctx.args.data.province.substring(1));
+    if (!provinces.includes(ctx.args.data.province)) next('Esa provincia no esta recogida');
     next(null, ctx.args.data);
   });
 
@@ -34,8 +37,9 @@ module.exports = function(Alert) {
     http: {path: '/:id/close-alert'},
 
     accepts: [
-      {arg: 'id', type: 'string', http: {source: 'path'}},
+      {arg: 'id', type: 'string', required: true, http: {source: 'path'}},
       {arg: 'req', type: 'object', http: {source: 'req'}},
+      {arg: 'note', type: 'string', required: true},
     ],
 
     returns: {arg: 'response', type: 'object', root: true},

@@ -1,10 +1,9 @@
 'use strict';
 
-
 module.exports = function HelperAlert(Alert) {
   let admin = require('firebase-admin');
   const serviceAccount = require('../../credentials/app-pruebas-972aa-firebase-adminsdk-db8la-aceac291ba.json');
-  
+
   if (!firebaseApp) {
     var firebaseApp = admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
@@ -12,21 +11,25 @@ module.exports = function HelperAlert(Alert) {
     });
   }
 
-  this.closeAlert = (id, req, next) => {
+  this.closeAlert = (id, req, note, next) => {
     const AccessToken = Alert.app.models.AccessToken;
     AccessToken.findById(req.query.access_token, function(err, accessInstance) {
       if (err) next(err);
-      if (accessInstance.userId == id) {
-        Alert.finById(id, function(err, alertInstance) {
-          // Pasarlo a la otra tabla
-          if (err) next(err);
-          alertInstance.state = 'closed';
-          alertInstance.save(next);
-        });
-        next(null, 'Closed');
-      } else {
-        next(new Error('You can\'t close the alert of another technician'));
-      }
+      Alert.findById(id, function(err, alertInstance) {
+        if (err) next(err);
+        if (alertInstance.state == 'unfinished') {
+          next(new Error('You can\'t close an alert that is not finished'));
+        }
+        if (alertInstance.state == 'closed') {
+          next(new Error('You can\'t close an alert that is already closed'));
+        }
+        if (accessInstance.userId != alertInstance.owner) {
+          next(new Error('You can\'t close the alert of another technician'));
+        }
+        alertInstance.state = 'closed';
+        alertInstance.note = note;
+        alertInstance.save(next);
+      });
     });
   };
 
