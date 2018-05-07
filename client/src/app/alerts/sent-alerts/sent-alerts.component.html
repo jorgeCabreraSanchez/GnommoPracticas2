@@ -1,0 +1,99 @@
+<h3>Alertas enviadas</h3>
+<hr>
+<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllAlerts">Eliminar todas las alertas</button>
+<br>
+<br>
+<p>
+  <a [routerLink]="['']" (click)="logout()">Cerrar sesión</a>
+</p>
+<p>
+  <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
+</p>
+<br>
+<h6 class="alert alert-danger" *ngIf="alerts.length ==0">No has enviado ninguna alerta</h6>
+<table *ngIf="alerts.length !=0" class="table table-bordered table-striped tabla">
+  <thead>
+    <tr class="filters">
+      <th>Fecha</th>
+      <th>Para</th>
+      <th>Asunto</th>
+      <th style="width: 50%">Mensaje</th>
+      <th>
+        <fa name="paperclip"></fa>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let alert of alerts">
+      <td *ngIf="alert.subject ==''">Sin asunto</td>
+      <td *ngIf="alert.subject !=''">{{ alert.subject }}</td>
+      <td *ngIf="alert.alert ==''">Sin texto de alerta</td>
+      <td *ngIf="alert.alert !=''">{{ alert.alert }}</td>
+      <td *ngFor="let attached of alert.attachments">
+        <a href="{{ attached }}"> {{ attached }}</a>
+      </td>
+      <td>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAlert" (click)="idEliminar(alert.id)">
+          <fa name="trash"></fa>Eliminar alerta</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+<button class="btn btn-success" [routerLink]="['/nuevo']">Nueva alerta</button>
+
+<!-- Modal de eliminar un alerta -->
+<div class="modal fade" id="deleteAlert">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar acción</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        ¿Estás seguro de querer eliminar este alerta?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="delSentAlert(profileId, alertId)" data-toggle="modal" data-target="#deleteAlert">
+          Confirmar
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Modal de eliminar todas las alertas -->
+<div class="modal fade" id="deleteAllAlerts">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar acción</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        ¿Estás seguro de querer eliminar todas las alertas?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="delSentAlerts(profileId)" data-toggle="modal" data-target="#deleteAllAlerts">
+          Confirmar
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>

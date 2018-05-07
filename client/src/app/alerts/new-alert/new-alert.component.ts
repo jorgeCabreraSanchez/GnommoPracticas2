@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfilesService } from '../../services/profiles.service';
+import { TechnicianService } from '../../services/technician.service';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
@@ -7,19 +7,19 @@ import { Title } from '@angular/platform-browser';
 import * as $ from 'jquery';
 
 @Component({
-  selector: 'app-new-message',
-  templateUrl: './new-message.component.html',
-  styleUrls: ['./new-message.component.css']
+  selector: 'app-new-alert',
+  templateUrl: './new-alert.component.html',
+  styleUrls: ['./new-alert.component.css']
 })
-export class NewMessageComponent implements OnInit {
+export class NewAlertComponent implements OnInit {
 
-  messageForm: FormGroup;
-  message: any;
+  alertForm: FormGroup;
+  alert: any;
   profileId: string;
   storedFiles: any = [];
 
   constructor(private pf: FormBuilder,
-    private profilesService: ProfilesService,
+    private technicianService: TechnicianService,
     private router: Router,
     private notification: NotificationsService,
     private activatedRouter: ActivatedRoute,
@@ -27,25 +27,25 @@ export class NewMessageComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Nuevo mensaje');
-    this.messageForm = this.pf.group({
+    this.alertForm = this.pf.group({
       to: ['', [Validators.required, Validators.email]],
       subject: ['', [Validators.required, Validators.minLength(3)]],
-      message: ['', [Validators.required, Validators.minLength(3)]],
+      alert: ['', [Validators.required, Validators.minLength(3)]],
       files: []
     });
   }
 
   onSubmit() {
-    this.message = this.saveMessage();
+    this.alert = this.saveAlert();
     // Método para obtener el id del destinatario a partir de su email
-    this.profilesService.createMessage(this.profileId, this.message).subscribe(newmessage => {
+    this.technicianService.createAlert(this.profileId, this.alert).subscribe(newalert => {
       if ($('#image')[0].files[0]) {
-        this.profilesService.postFiles(this.storedFiles, this.profileId).subscribe(data => {
-          this.router.navigate(['/recibidos']);
+        this.technicianService.postFiles(this.storedFiles, this.profileId).subscribe(data => {
+          this.router.navigate(['/recibidas']);
         },
           error => {
             console.log(error);
-            this.router.navigate(['/recibidos']);
+            this.router.navigate(['/recibidas']);
             this.notification.error('Error al subir los archivos', '', {
               showProgressBar: true,
               pauseOnHover: false,
@@ -54,11 +54,11 @@ export class NewMessageComponent implements OnInit {
             });
           });
       } else {
-        this.router.navigate(['/recibidos']);
+        this.router.navigate(['/recibidas']);
       }
 
-      this.router.navigate(['recibidos']);
-      this.notification.success('Mensaje enviado con éxito', '', {
+      this.router.navigate(['recibidas']);
+      this.notification.success('Alerta enviada con éxito', '', {
         showProgressBar: true,
         pauseOnHover: false,
         clickToClose: false,
@@ -67,7 +67,7 @@ export class NewMessageComponent implements OnInit {
     },
       error => {
         console.log(error);
-        this.notification.error('Error al enviar el mensaje', '', {
+        this.notification.error('Error al enviar la alerta', '', {
           showProgressBar: true,
           pauseOnHover: false,
           clickToClose: false,
@@ -76,13 +76,13 @@ export class NewMessageComponent implements OnInit {
       });
   }
 
-  saveMessage() {
-    const saveMessage = {
-      to: this.messageForm.get('to').value,
-      subject: this.messageForm.get('subject').value,
-      message: this.messageForm.get('message').value
+  saveAlert() {
+    const saveAlert = {
+      to: this.alertForm.get('to').value,
+      subject: this.alertForm.get('subject').value,
+      alert: this.alertForm.get('alert').value
     };
-    return saveMessage;
+    return saveAlert;
   }
 
   fileChangeEvent(fileInput: any) {

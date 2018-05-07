@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
-import { ProfilesService } from '../services/profiles.service';
+import { TechnicianService } from '../services/technician.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService,
-    private profilesService: ProfilesService,
+    private techniciansService: TechnicianService,
     private Notification: NotificationsService,
     private titleService: Title) { }
 
@@ -26,8 +26,8 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('Servicio de alertas-Iniciar sesión');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
-      if (this.profilesService.isAuthenticated()) {
-        this.router.navigate(['recibidos']);
+      if (this.techniciansService.isAuthenticated()) {
+        this.router.navigate(['recibidas']);
       } else {
         this.authenticationService.logout();
         console.log('Borra el currentUser');
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         data => {
           this.authenticationService.asignRole(data)
             .subscribe(resultado => {
-              this.router.navigate(['recibidos']);
+              this.router.navigate(['recibidas']);
             });
         },
         error => {

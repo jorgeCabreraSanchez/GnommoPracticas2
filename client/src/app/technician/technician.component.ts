@@ -3,28 +3,28 @@ import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { ProfilesService } from '../services/profiles.service';
+import { TechnicianService } from '../services/technician.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  selector: 'app-technician',
+  templateUrl: './technician.component.html',
+  styleUrls: ['./technician.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class TechnicianComponent implements OnInit {
 
-  profiles: any = [];
-  profileId: string;
+  technician: any = [];
+  technicianId: string;
 
-  constructor(private profilesService: ProfilesService,
+  constructor(private technicianService: TechnicianService,
     private titleService: Title,
     private authenticationService: AuthenticationService,
     private router: Router) {
-    const role = this.profilesService.getRole();
+    const role = this.technicianService.getRole();
     if (role === 'admin') {
-      this.profilesService.getProfiles()
+      this.technicianService.getTechnicians()
         .subscribe(
-          profiles => {
-            this.profiles = profiles;
+          technician => {
+            this.technician = technician;
           },
           error => {
             console.log(error);
@@ -32,10 +32,10 @@ export class ProfileComponent implements OnInit {
           });
 
     } else if (role === 'normal') {
-      this.profilesService.getProfile(JSON.parse(localStorage.getItem('currentUser')).userId)
+      this.technicianService.getTechnician(JSON.parse(localStorage.getItem('currentUser')).userId)
         .subscribe(
-          profiles => {
-            this.profiles.push(profiles);
+          technician => {
+            this.technician.push(technician);
           },
           error => {
             console.log(error);
@@ -51,24 +51,24 @@ export class ProfileComponent implements OnInit {
     this.titleService.setTitle('Perfil personal');
   }
 
-  delProfile(id, event: any) {
-    this.profilesService.delProfile(id)
+  delTechnician(id, event: any) {
+    this.technicianService.delTechnician(id)
       .subscribe(delcon => {
-        this.profiles = [];
-        this.profilesService.getProfiles()
-          .subscribe(profiles => {
+        this.technician = [];
+        this.technicianService.getTechnicians()
+          .subscribe(technician => {
             // tslint:disable-next-line:forin
-            for (const id$ in profiles) {
-              const p = profiles[id$];
+            for (const id$ in technician) {
+              const p = technician[id$];
               p.id$ = id$;
-              this.profiles.push(profiles[id$]);
+              this.technician.push(technician[id$]);
             }
           });
       });
   }
 
   idEliminar(id) {
-    this.profileId = id;
+    this.technicianId = id;
   }
 
   logout() {

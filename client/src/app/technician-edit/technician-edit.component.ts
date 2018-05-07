@@ -4,18 +4,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import * as $ from 'jquery';
 import { Title } from '@angular/platform-browser';
-import { ProfilesService } from '../services/profiles.service';
+import { TechnicianService } from '../services/technician.service';
 
 @Component({
-  selector: 'app-profile-edit',
-  templateUrl: './profile-edit.component.html',
-  styleUrls: ['./profile-edit.component.css']
+  selector: 'app-technician-edit',
+  templateUrl: './technician-edit.component.html',
+  styleUrls: ['./technician-edit.component.css']
 })
-export class ProfileEditComponent implements OnInit {
+export class TechnicianEditComponent implements OnInit {
 
-  profileForm: FormGroup;
-  profile: any = { name: '', surname: '', /* phone: '', */ email: '', image: '' };
-  idProfile: string;
+  technicianForm: FormGroup;
+  technician: any = { name: '', surname: '', /* phone: '', */ email: '', image: '' };
+  idTechnician: string;
   // username: string;
   name: string;
   surname: string;
@@ -25,19 +25,19 @@ export class ProfileEditComponent implements OnInit {
   validate = false;
   // emailValid = true;
 
-  constructor(private pf: FormBuilder, private profilesService: ProfilesService, private router: Router,
+  constructor(private pf: FormBuilder, private techniciansService: TechnicianService, private router: Router,
     private activatedRouter: ActivatedRoute, private notification: NotificationsService, private titleService: Title) {
     this.activatedRouter.params
       .subscribe(parametros => {
-        this.idProfile = parametros['id'];
-        this.profilesService.getProfile(this.idProfile).subscribe(profile => {
-          // console.log(profile);
-          this.profile = profile;
-          // this.username = this.profile.username;
-          this.name = this.profile.name;
-          this.surname = this.profile.surname;
-          // this.phone = this.profile.phone;
-          this.email = this.profile.email;
+        this.idTechnician = parametros['id'];
+        this.techniciansService.getTechnician(this.idTechnician).subscribe(technician => {
+          // console.log(technician);
+          this.technician = technician;
+          // this.username = this.technician.username;
+          this.name = this.technician.name;
+          this.surname = this.technician.surname;
+          // this.phone = this.technician.phone;
+          this.email = this.technician.email;
           // this.imagen = $("#imagen").val().replace(/^.*\\/, "")
           this.onChanges();
         });
@@ -46,7 +46,7 @@ export class ProfileEditComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Modificar perfil');
-    this.profileForm = this.pf.group({
+    this.technicianForm = this.pf.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       surname: ['', [Validators.required, Validators.minLength(3)]],
       // phone: ['', [Validators.pattern(/^(\+34|0034|34)?[6|7|9][0-9]{8}$/)]],
@@ -56,10 +56,10 @@ export class ProfileEditComponent implements OnInit {
   }
 
   onSubmit() {
-    this.profile = this.saveProfile();
-    this.profilesService.patchProfile(this.profile, this.idProfile).subscribe((editcon: any) => {
+    this.technician = this.saveTechnician();
+    this.techniciansService.patchTechnician(this.technician, this.idTechnician).subscribe((editcon: any) => {
       if ($('#image')[0].files[0]) {
-        this.profilesService.postImage($('#image')[0].files[0], editcon.id).subscribe(data => {
+        this.techniciansService.postImage($('#image')[0].files[0], editcon.id).subscribe(data => {
           this.router.navigate(['/perfil']);
         },
           error => {
@@ -90,19 +90,19 @@ export class ProfileEditComponent implements OnInit {
       });
   }
 
-  saveProfile() {
-    const saveProfile = {
-      // username: this.profileForm.get('username').value,
-      name: this.profileForm.get('name').value,
-      surname: this.profileForm.get('surname').value,
-      // phone: this.profileForm.get('phone').value,
-      email: this.profileForm.get('email').value
+  saveTechnician() {
+    const saveTechnician = {
+      // username: this.technicianForm.get('username').value,
+      name: this.technicianForm.get('name').value,
+      surname: this.technicianForm.get('surname').value,
+      // phone: this.technicianForm.get('phone').value,
+      email: this.technicianForm.get('email').value
     };
-    return saveProfile;
+    return saveTechnician;
   }
 
   onChanges(): void {
-    this.profileForm.valueChanges
+    this.technicianForm.valueChanges
       .subscribe(valor => {
         if (valor.name !== this.name
           || valor.surname !== this.surname || /* valor.phone !== this.phone || */ valor.email !== this.email) {

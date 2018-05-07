@@ -1,6 +1,7 @@
-<h3>Mensajes enviados</h3>
+<h3>
+  Alertas recibidas</h3>
 <hr>
-<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllMessages">Eliminar todos los mensajes</button>
+<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllAlerts">Eliminar todos los mensajes</button>
 <br>
 <br>
 <p>
@@ -10,40 +11,47 @@
   <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
 </p>
 <br>
-<h6 class="alert alert-danger" *ngIf="messages.length ==0">No has enviado ningún mensaje</h6>
-<table *ngIf="messages.length !=0" class="table table-bordered table-striped tabla">
+<h6 class="alert alert-danger" *ngIf="alerts.length ==0">No tienes mensajes</h6>
+<table *ngIf="alerts.length !=0" class="table table-bordered table-striped tabla">
   <thead>
     <tr class="filters">
       <th>Fecha</th>
-      <th>Para</th>
+      <th>Asignada</th>
+      <th>De</th>
       <th>Asunto</th>
-      <th style="width: 50%">Mensaje</th>
+      <th style="width: 30%">Mensaje</th>
       <th>
         <fa name="paperclip"></fa>
       </th>
+      <th>Eliminar</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let message of messages">
-      <td *ngIf="message.subject ==''">Sin asunto</td>
-      <td *ngIf="message.subject !=''">{{ message.subject }}</td>
-      <td *ngIf="message.message ==''">Sin texto de mensaje</td>
-      <td *ngIf="message.message !=''">{{ message.message }}</td>
-      <td *ngFor="let attached of message.attachments">
+    <tr *ngFor="let alert of alerts">
+      <td>{{ alert.date | date: 'dd/MM/yyyy' }}</td>
+      <td *ngIf="alert.assigned==true" click="unassignAlert(profileId, alert.id)">Sí</td>
+      <td *ngIf="alert.assigned==true" click="assignAlert(profileId, alert.id)">No</td>
+      <td>{{ alert.from }}</td>
+      <td *ngIf="!alert.subject">Sin asunto</td>
+      <td>{{ alert.subject }}</td>
+      <td *ngIf="!alert.alert">Sin texto de mensaje</td>
+      <td>{{ alert.alert }}</td>
+      <!--<td *ngIf="!alert.attachments">Sin adjuntos</td>-->
+      <td *ngFor="let attached of alert.attachments">
         <a href="{{ attached }}"> {{ attached }}</a>
       </td>
       <td>
-        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteMessage" (click)="idEliminar(message.id)">
+        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAlert" (click)="idEliminar(alert.id)">
           <fa name="trash"></fa>Eliminar mensaje</button>
       </td>
     </tr>
   </tbody>
 </table>
 <hr>
-<button class="btn btn-success" [routerLink]="['/nuevo']">Nuevo mensaje</button>
+<!--<button class="btn btn-success" [routerLink]="['/nuevo']">Nueva alerta</button>-->
 
 <!-- Modal de eliminar un mensaje -->
-<div class="modal fade" id="deleteMessage">
+<div class="modal fade" id="deleteAlert">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -60,7 +68,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delSentMessage(profileId, messageId)" data-toggle="modal" data-target="#deleteMessage">
+        <button class="btn btn-danger" (click)="delReceivedAlert(profileId, alertId)" data-toggle="modal" data-target="#deleteAlert">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -71,7 +79,7 @@
 </div>
 
 <!--Modal de eliminar todos los mensajes -->
-<div class="modal fade" id="deleteAllMessages">
+<div class="modal fade" id="deleteAllAlerts">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -88,7 +96,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delSentMessages(profileId)" data-toggle="modal" data-target="#deleteAllMessages">
+        <button class="btn btn-danger" (click)="delReceivedAlerts(profileId)" data-toggle="modal" data-target="#deleteAllAlerts">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>

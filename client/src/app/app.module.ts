@@ -13,7 +13,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { PushNotificationModule } from 'ng-push-notification';
 
 import { AuthenticationService } from './services/authentication.service';
-import { ProfilesService } from './services/profiles.service';
+import { TechnicianService } from './services/technician.service';
 import { AlertService } from './services/alert.service';
 // import { MessagesService } from './services/messages.service';
 
@@ -25,20 +25,20 @@ import { PasswordChangeComponent } from './password/password-change/password-cha
 import { PasswordRecoverComponent } from './password/password-recover/password-recover.component';
 import { PasswordRecoverRequestComponent } from './password/password-recover-request/password-recover-request.component';
 import { HeaderComponent } from './header/header.component';
-import { ProfileComponent } from './profile/profile.component';
-import { ProfileEditComponent } from './profile-edit/profile-edit.component';
-import { NewMessageComponent } from './messages/new-message/new-message.component';
-import { SentMessagesComponent } from './messages/sent-messages/sent-messages.component';
-import { ReceivedMessagesComponent } from './messages/received-messages/received-messages.component';
+import { TechnicianComponent } from './technician/technician.component';
+import { TechnicianEditComponent } from './technician-edit/technician-edit.component';
+import { NewAlertComponent } from './alerts/new-alert/new-alert.component';
+import { SentAlertsComponent } from './alerts/sent-alerts/sent-alerts.component';
+import { ReceivedAlertsComponent } from './alerts/received-alerts/received-alerts.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
-  { path: 'perfil', component: ProfileComponent },
-  { path: 'recibidos', component: ReceivedMessagesComponent },
-  { path: 'enviados', component: SentMessagesComponent },
-  { path: 'nuevo', component: NewMessageComponent },
-  { path: 'perfil/:id/editar', component: ProfileEditComponent },
+  { path: 'tecnico', component: TechnicianComponent },
+  { path: 'recibidas', component: ReceivedAlertsComponent },
+  { path: 'enviadas', component: SentAlertsComponent },
+  { path: 'nuevo', component: NewAlertComponent },
+  { path: 'tecnico/:id/editar', component: TechnicianEditComponent },
   { path: 'nueva-contrasena', component: PasswordRecoverComponent },
   { path: 'recuperar-contrasena', component: PasswordRecoverRequestComponent },
   { path: 'cambiar-contrasena', component: PasswordChangeComponent },
@@ -55,11 +55,11 @@ const routes: Routes = [
     PasswordRecoverRequestComponent,
     HeaderComponent,
     AlertComponent,
-    ProfileComponent,
-    ProfileEditComponent,
-    NewMessageComponent,
-    SentMessagesComponent,
-    ReceivedMessagesComponent
+    TechnicianComponent,
+    TechnicianEditComponent,
+    NewAlertComponent,
+    SentAlertsComponent,
+    ReceivedAlertsComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +82,7 @@ const routes: Routes = [
     multi: true
   },
     AuthenticationService,
-    ProfilesService,
+    TechnicianService,
     AlertService
   ],
   bootstrap: [AppComponent]
