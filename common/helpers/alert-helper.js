@@ -33,6 +33,10 @@ module.exports = function HelperAlert(Alert) {
     });
   };
 
+  this.patchAttributes = (ctx, next) => {
+    console.log(ctx);
+  };
+
   this.sendNotification = (alertInstance, next) => {
     const topic = `/topics/${alertInstance.province}`;
 

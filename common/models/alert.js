@@ -17,15 +17,11 @@ module.exports = function(Alert) {
   });
 
   Alert.afterRemote('create', function(context, alertInstance, next) {
-    // console.log(context);
     helperAlert.sendNotification(alertInstance, next);
   });
 
   Alert.beforeRemote('*.patchAttributes', function(ctx, instance, next) {
-    console.log(ctx);
-    console.log(instance);
-    console.log('Entra');
-    next(null, true);
+    helperAlert.patchAttributes(ctx, next);
   });
 
   Alert.closeAlert = helperAlert.closeAlert;
