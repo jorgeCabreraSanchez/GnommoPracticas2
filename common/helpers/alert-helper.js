@@ -35,6 +35,18 @@ module.exports = function HelperAlert(Alert) {
 
   this.patchAttributes = (ctx, next) => {
     console.log(ctx);
+    if (ctx.args.data.hasOwnProperty('assigned')) {
+      if (ctx.args.data.assigned) {
+        if (!ctx.args.data.owner && !ctx.instance.owner) {
+          next(new Error('If assigned is true, must have an owner'));
+        }
+      } else {
+        if (ctx.args.data.owner || ctx.instance.owner) {
+          next(new Error('Can\'t put assign false having a owner'));
+        }
+      }
+    }
+    next(null, true);
   };
 
   this.sendNotification = (alertInstance, next) => {
@@ -42,8 +54,8 @@ module.exports = function HelperAlert(Alert) {
 
     var payload = {
       notification: {
-        title: 'Se requiere de un médico',
-        body: `${alertInstance.title}`,
+        title: `${alertInstance.title}`,
+        body: `${alertInstance.description}`,
         color: 'blue',
         tag: `${alertInstance.title}`,
       },
@@ -70,3 +82,4 @@ module.exports = function HelperAlert(Alert) {
     });
   };
 };
+

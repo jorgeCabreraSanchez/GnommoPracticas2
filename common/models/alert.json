@@ -6,15 +6,7 @@
     "validateUpsert": true
   },
   "hidden": [],
-  "properties": {
-    "assigned": {
-      "type": "boolean",
-      "required": true
-    },
-    "date": {
-      "type": "number",
-      "required": true
-    },
+  "properties": {    
     "title": {
       "type": "string",
       "required": true
@@ -25,6 +17,18 @@
     },
     "province": {
       "type": "string",
+      "required": true
+    },
+    "creator": {
+      "type": "string",
+      "required": true
+    },
+    "assigned": {
+      "type": "boolean",
+      "required": true
+    },
+    "date": {
+      "type": "number",
       "required": true
     },
     "owner": {

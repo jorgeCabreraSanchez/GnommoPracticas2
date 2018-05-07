@@ -8,6 +8,7 @@ module.exports = function(Alert) {
   const provinces = ['Madrid', 'Barcelona'];
 
   Alert.beforeRemote('create', function(ctx, alertInstance, next) {
+    console.log(ctx);
     ctx.args.data.date = Date.now();
     ctx.args.data.state = 'unfinished';
     ctx.args.data.assigned = false;
