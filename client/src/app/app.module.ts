@@ -10,12 +10,10 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { FormsModule } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-// import { PushNotificationModule } from 'ng-push-notification';
 
 import { AuthenticationService } from './services/authentication.service';
 import { TechnicianService } from './services/technician.service';
 import { AlertService } from './services/alert.service';
-// import { MessagesService } from './services/messages.service';
 
 import { AlertComponent } from './directives/alert.component';
 import { AppComponent } from './app.component';
@@ -84,7 +82,7 @@ const routes: Routes = [
     AuthenticationService,
     TechnicianService,
     AlertService
-  ],
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

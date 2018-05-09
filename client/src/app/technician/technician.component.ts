@@ -31,7 +31,7 @@ export class TechnicianComponent implements OnInit {
             this.logout();
           });
 
-    } else if (role === 'normal') {
+    } else if (role === 'technician') {
       this.technicianService.getTechnician(JSON.parse(localStorage.getItem('currentUser')).userId)
         .subscribe(
           technician => {

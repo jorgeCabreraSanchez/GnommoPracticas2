@@ -15,7 +15,7 @@ export class AuthenticationService {
 
       // Ponemos el access_token aquí porque el currentUser.id del interceptor aún no esta asignado (setItem)
       // Aun no esta asignado porque primero le voy a añadir el role
-      return this.http.get(`http://localhost:3000/api/technicians/${userId}/get-roles-by-id`, { params: params })
+      return this.http.get(`http://localhost:3000/api/appusers/${userId}/get-roles-by-id`, { params: params })
         .map(
           (role: any) => {
             user.role = role.name;
@@ -30,18 +30,18 @@ export class AuthenticationService {
 
   login(login: string, password: string) {
     if (login.indexOf('@') !== -1) {
-      return this.http.post('http://localhost:3000/api/technicians/login', { 'email': login, 'password': password });
+      return this.http.post('http://localhost:3000/api/appusers/login', { 'email': login, 'password': password });
     } else {
-      return this.http.post('http://localhost:3000/api/technicians/login', { 'username': login, 'password': password });
+      return this.http.post('http://localhost:3000/api/appusers/login', { 'username': login, 'password': password });
     }
   }
 
   async isAuthenticated(): Promise<boolean> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
-      const doctorId = currentUser.userId;
+      const technicianId = currentUser.userId;
       const token = currentUser.id;
-      return await this.http.get(`http://localhost:3000/api/technicians/${doctorId}/accessTokens/${token}`)
+      return await this.http.get(`http://localhost:3000/api/appusers/${technicianId}/accessTokens/${token}`)
         .map(
           (resultado: any) => {
             if (resultado && resultado.id) {
@@ -62,11 +62,11 @@ export class AuthenticationService {
     const newuser = JSON.stringify(user);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post('http://localhost:3000/api/technicians', newuser, { headers });
+    return this.http.post('http://localhost:3000/api/appusers', newuser, { headers });
   }
 
   emailReset(resetEmail: any) {
-    const emailURL = 'http://localhost:3000/api/technicians/reset';
+    const emailURL = 'http://localhost:3000/api/appusers/reset';
     const email = JSON.stringify(resetEmail);
     // console.log(email);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
@@ -79,7 +79,7 @@ export class AuthenticationService {
   }
 
   resetPassword(newPassword: any, routerUrl: string) {
-    const passwordURL = 'http://localhost:3000/api/technicians/reset-password' + routerUrl;
+    const passwordURL = 'http://localhost:3000/api/appusers/reset-password' + routerUrl;
     // console.log(passwordURL);
     const password = newPassword;
     // console.log(password);
@@ -95,7 +95,7 @@ export class AuthenticationService {
   changePassword(Passwords: any) {
     // console.log(JSON.parse(localStorage.getItem('currentUser')).id);
     // tslint:disable-next-line:max-line-length
-    const passwordURL = 'http://localhost:3000/api/technicians/change-password?access_token=' + JSON.parse(localStorage.getItem('currentUser')).id;
+    const passwordURL = 'http://localhost:3000/api/appusers/change-password?access_token=' + JSON.parse(localStorage.getItem('currentUser')).id;
     // console.log(passwordURL);
     const password = Passwords;
     // console.log(password);
@@ -115,7 +115,7 @@ export class AuthenticationService {
       const params = new HttpParams().set('access_token', currentUser.id);
       const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-      this.http.post('http://localhost:3000/api/technicians/logout', { headers }, { params: params })
+      this.http.post('http://localhost:3000/api/appusers/logout', { headers }, { params: params })
         .subscribe(
           data => {
             console.log('logout');

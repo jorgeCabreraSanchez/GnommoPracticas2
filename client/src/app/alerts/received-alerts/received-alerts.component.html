@@ -1,7 +1,7 @@
 <h3>
   Alertas recibidas</h3>
 <hr>
-<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllAlerts">Eliminar todos los mensajes</button>
+<button class="btn btn-danger" data-toggle="modal" data-target="#deleteAllAlerts">Eliminar todas las alertas</button>
 <br>
 <br>
 <p>
@@ -11,15 +11,16 @@
   <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
 </p>
 <br>
-<h6 class="alert alert-danger" *ngIf="alerts.length ==0">No tienes mensajes</h6>
+<h6 class="alert alert-danger" *ngIf="alerts.length ==0">No tienes alertas</h6>
 <table *ngIf="alerts.length !=0" class="table table-bordered table-striped tabla">
   <thead>
     <tr class="filters">
-      <th>Fecha</th>
       <th>Asignada</th>
-      <th>De</th>
-      <th>Asunto</th>
-      <th style="width: 30%">Mensaje</th>
+      <th>Fecha</th>
+      <th>Título</th>
+      <th style="width: 30%">Descripción</th>
+      <th>Provincia</th>
+      <th style="width: 30%">Finalizada</th>
       <th>
         <fa name="paperclip"></fa>
       </th>
@@ -28,17 +29,19 @@
   </thead>
   <tbody>
     <tr *ngFor="let alert of alerts">
+      <td *ngIf="alert.assigned==true">Sí</td>
+      <td *ngIf="alert.assigned==false" click="assignAlert(profileId, alert.id)">No</td>
       <td>{{ alert.date | date: 'dd/MM/yyyy' }}</td>
-      <td *ngIf="alert.assigned==true" click="unassignAlert(profileId, alert.id)">Sí</td>
-      <td *ngIf="alert.assigned==true" click="assignAlert(profileId, alert.id)">No</td>
-      <td>{{ alert.from }}</td>
-      <td *ngIf="!alert.subject">Sin asunto</td>
-      <td>{{ alert.subject }}</td>
-      <td *ngIf="!alert.alert">Sin texto de mensaje</td>
-      <td>{{ alert.alert }}</td>
+      <td *ngIf="alert.title!=''">{{ alert.title }}</td>
+      <td *ngIf="alert.title==''">Sin título</td>
+      <td>{{ alert.province }}</td>
+      <td *ngIf="alert.description==''">Sin descripción</td>
+      <td *ngIf="alert.description!=''">{{ alert.description }}</td>
+      <td *ngIf="alert.state=='finished'" click="unassignAlert(profileId, alert.id)">Sí</td>
+      <td *ngIf="alert.state=='unfinished'" click="assignAlert(profileId, alert.id)">No</td>
       <!--<td *ngIf="!alert.attachments">Sin adjuntos</td>-->
       <td *ngFor="let attached of alert.attachments">
-        <a href="{{ attached }}"> {{ attached }}</a>
+        <a href="{{ attached }}">{{ attached }}</a>
       </td>
       <td>
         <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAlert" (click)="idEliminar(alert.id)">
@@ -63,7 +66,7 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        ¿Estás seguro de querer eliminar este mensaje?
+        ¿Estás seguro de querer eliminar esta alerta?
       </div>
 
       <!-- Modal footer -->
@@ -91,7 +94,7 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        ¿Estás seguro de querer eliminar todos los mensajes?
+        ¿Estás seguro de querer eliminar todas las alertas?
       </div>
 
       <!-- Modal footer -->

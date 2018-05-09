@@ -28,7 +28,7 @@
         <img src="{{ profile.image }}" alt="No hay imagen" height="42" width="80">
       </td>
       <td>
-        <button class="btn btn-success" routerLink="/perfil/{{ profile.id }}/editar">
+        <button class="btn btn-success" routerLink="/tecnico/{{ profile.id }}/editar">
           <fa name="edit"></fa>
         </button>
         <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="idEliminar(profile.id)">

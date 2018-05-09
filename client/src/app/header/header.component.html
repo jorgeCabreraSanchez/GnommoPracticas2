@@ -7,14 +7,14 @@
     </button>
     <div class="navbar-items collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav" *ngIf="isAuth()">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/recibidos">Mensajes recibidos</a>
+        <li *ngIf="role=='technician'" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/recibidas">Alertas recibidas</a>
+        </li>
+        <li *ngIf="role=='hospitalUser'" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/enviadas">Alertas enviadas</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/enviados">Mensajes enviados</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/perfil">Perfil personal</a>
+          <a class="nav-link" routerLink="/tecnico">Perfil personal</a>
         </li>
       </ul>
     </div>

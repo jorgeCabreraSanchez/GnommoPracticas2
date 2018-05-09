@@ -9,12 +9,19 @@ import { TechnicianService } from '../services/technician.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  role: string;
+  auth: boolean;
 
   constructor(private techniciansService: TechnicianService) {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.role = this.techniciansService.getRole();
+    this.auth = this.techniciansService.isAuthenticated();
+    console.log(this.role);
+    console.log(this.auth);
+   }
 
   getRole() {
     return this.techniciansService.getRole();
