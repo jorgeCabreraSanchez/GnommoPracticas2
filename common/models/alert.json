@@ -60,7 +60,7 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
+      "principalId": "technician",
       "permission": "ALLOW",
       "property": "closeAlert"
     },

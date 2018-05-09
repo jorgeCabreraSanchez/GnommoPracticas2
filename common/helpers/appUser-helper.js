@@ -42,7 +42,7 @@ module.exports = function HelperAppUser(AppUser) {
       let RoleMappingModel = AppUser.app.models.RoleMapping;
       let RoleModel = AppUser.app.models.Role;
 
-      RoleModel.findOne({where: {name: 'normal'}}, (err, role) => {
+      RoleModel.findOne({where: {name: 'technician'}}, (err, role) => {
         if (err) return next(new Error(err));
         role.principals.create({
           principalType: RoleMappingModel.USER,
@@ -134,9 +134,18 @@ module.exports = function HelperAppUser(AppUser) {
 
   this.assignAlert = (id, alertId, next) => {
     const {Alert} = AppUser.app.models;
+    AppUser.getRolesById(id, (err, role) => {
+      if (err) next(err);
+      if (role != 'technician') {
+        next(new Error('Only a technician can\'t be a owner'));
+      }
+    });
     Alert.findById(alertId, function(err, alertInstance) {
       if (err) next(err);
-      alertInstance.updateAttributes({owner: id, assigned: true, state: 'unfinished'}, function(err, instance) {
+      if (alertInstance.owner) {
+        next(new Error('Alert is already assigned'));
+      }
+      alertInstance.updateAttributes({owner: id, assigned: true}, function(err, instance) {
         if (err) next(err);
         next(null, instance);
       });
@@ -145,6 +154,40 @@ module.exports = function HelperAppUser(AppUser) {
 
   this.generateNotificationForProvince = (province, next) => {
 
+  };
+
+  this.assignRole = (id, role, next) => {
+    let RoleMappingModel = AppUser.app.models.RoleMapping;
+    let RoleModel = AppUser.app.models.Role;
+
+    RoleMappingModel.findOne({where: {principalId: id}}, (err, roleMapping) => {
+      if (err) return next(err);
+      RoleMappingModel.deleteById(roleMapping.id, (err, roleMappingDelete) => {
+        if (err) return next(err);
+        return next(null, roleMappingDelete);
+      });
+    }); //COMPROBAR ESTO
+
+    RoleModel.findOne({where: {name: role}}, (err, role) => {
+      if (err) return next(err);
+      role.principals.create({
+        principalType: RoleMappingModel.USER,
+        principalId: id,
+        roleId: role.id,
+      }, function(err, principal) {
+        if (err) return next(err);
+        console.log(`Assigned user ${id} to role:`, role.name);
+        return next(null, true);
+      });
+    });
+  };
+
+  this.getCreatedAlerts = (id, next) => {
+    const Alerts = AppUser.app.models.Alerts;
+    Alerts.find({where: {creator: id}}, (err, alerts) => {
+      if (err) next(err);
+      next(null, alerts);
+    });
   };
 
   // this.deleteAccessToken = (context, appUserInstance, next) => {

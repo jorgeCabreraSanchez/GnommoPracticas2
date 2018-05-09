@@ -3,6 +3,7 @@
 module.exports = function HelperAlert(Alert) {
   let admin = require('firebase-admin');
   const serviceAccount = require('../../credentials/app-pruebas-972aa-firebase-adminsdk-db8la-aceac291ba.json');
+  const provinces = ['Barcelona', 'Madrid'];
 
   if (!firebaseApp) {
     var firebaseApp = admin.initializeApp({
@@ -34,17 +35,47 @@ module.exports = function HelperAlert(Alert) {
   };
 
   this.patchAttributes = (ctx, next) => {
-    console.log(ctx);
+    const AppUser = Alert.app.models.AppUser;
+    if (ctx.args.data.province) {
+      ctx.args.data.province = ctx.args.data.province.charAt(0).toUpperCase().concat(ctx.args.data.province.substring(1));
+      if (provinces.includes(ctx.args.data.province)) {
+        next(new Error('Province not exists'));
+      }
+    }
     if (ctx.args.data.hasOwnProperty('assigned')) {
       if (ctx.args.data.assigned) {
         if (!ctx.args.data.owner && !ctx.instance.owner) {
           next(new Error('If assigned is true, must have an owner'));
+        }
+        if (ctx.args.data.owner) {
+          AppUser.getRolesById(ctx.args.data.owner.id, (err, role) => {
+            if (err) next(err);
+            if (role != 'technician') {
+              next(new Error('Owner just can be a technician'));
+            }
+          });
         }
       } else {
         if (ctx.args.data.owner || ctx.instance.owner) {
           next(new Error('Can\'t put assign false having a owner'));
         }
       }
+    }
+
+    if (ctx.args.data.state) {
+      if (ctx.args.data.state == 'closed' || ctx.args.data.state == 'finished') {
+        if ((!ctx.args.data.owner || !ctx.instance.owner) && ctx.instance.assigned) {
+          next(new Error('You can\'t set state closed/finished without having owner and assigned true'));
+        }
+      }
+    }
+    if (ctx.args.data.creator) {
+      AppUser.getRolesById(ctx.args.data.creator, (err, role) => {
+        if (err) next(err);
+        if (role == 'technician') {
+          next(new Error('Creator can\'t be a technician'));
+        }
+      });
     }
     next(null, true);
   };
