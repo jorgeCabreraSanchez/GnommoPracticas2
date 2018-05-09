@@ -90,7 +90,8 @@ module.exports = function(AppUser) {
 
     accepts: [
       {arg: 'id', type: 'string', http: {source: 'path'}},
-      {arg: 'role', type: 'string', http: {source: 'path'}},
+      {arg: 'role', type: 'enum', values: ['admin', 'hospitalUser', 'technician'],
+        http: {source: 'query'}},
     ],
 
     returns: {arg: 'response', type: 'object', root: true},

@@ -54,7 +54,7 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "getRolesById"
+      "property": ["getRolesById", "assignAlert", "__findById__accessTokens"]
     },
     {
       "accessType": "*",
@@ -68,7 +68,7 @@
       "principalType": "ROLE",
       "principalId": "hospitalUser",
       "permission": "ALLOW",
-      "property": "generateNotificationForProvince"
+      "property": ["generateNotificationForProvince", "getCreatedAlerts"]
     },
     {
       "accessType": "*",
@@ -76,27 +76,6 @@
       "principalId": "technician",
       "permission": "ALLOW",
       "property": "getAlertsByOwnerProvince"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "assignAlert"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "hospitalUser",
-      "permission": "ALLOW",
-      "property": "getCreatedAlerts"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "__findById__accessTokens"      
     }
   ],
   "methods": {}

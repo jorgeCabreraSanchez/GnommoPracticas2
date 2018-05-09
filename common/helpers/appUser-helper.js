@@ -94,7 +94,7 @@ module.exports = function HelperAppUser(AppUser) {
         // Delete AccessToken
         accessTokenInstance.remove();
 
-        next(null, next);
+        return next(null, next);
         // Finish find accessToken
       });
     // Finish find roleMapping
@@ -124,10 +124,10 @@ module.exports = function HelperAppUser(AppUser) {
   this.getAlertsByOwnerProvince = (id, next) => {
     const {Alert} = AppUser.app.models;
     AppUser.findById(id, function(err, appUserInstance) {
-      if (err) next(err);
+      if (err) return next(err);
       Alert.find({where: {'province': appUserInstance.province}}, function(err, alerts) {
-        if (err) next(err);
-        next(null, alerts);
+        if (err) return next(err);
+        return next(null, alerts);
       });
     });
   };
@@ -135,19 +135,20 @@ module.exports = function HelperAppUser(AppUser) {
   this.assignAlert = (id, alertId, next) => {
     const {Alert} = AppUser.app.models;
     AppUser.getRolesById(id, (err, role) => {
-      if (err) next(err);
-      if (role != 'technician') {
-        next(new Error('Only a technician can\'t be a owner'));
+      if (err) return next(err);
+      if (role.name != 'technician') {
+        return next(new Error('Only a technician can\'t be a owner'));
       }
-    });
-    Alert.findById(alertId, function(err, alertInstance) {
-      if (err) next(err);
-      if (alertInstance.owner) {
-        next(new Error('Alert is already assigned'));
-      }
-      alertInstance.updateAttributes({owner: id, assigned: true}, function(err, instance) {
-        if (err) next(err);
-        next(null, instance);
+
+      Alert.findById(alertId, function(err, alertInstance) {
+        if (err) return next(err);
+        if (alertInstance.owner) {
+          return next(new Error('Alert is already assigned'));
+        }
+        alertInstance.updateAttributes({owner: id, assigned: true}, function(err, instance) {
+          if (err) return next(err);
+          return next(null, instance);
+        });
       });
     });
   };
@@ -166,7 +167,7 @@ module.exports = function HelperAppUser(AppUser) {
         if (err) return next(err);
         return next(null, roleMappingDelete);
       });
-    }); //COMPROBAR ESTO
+    }); // COMPROBAR ESTO
 
     RoleModel.findOne({where: {name: role}}, (err, role) => {
       if (err) return next(err);
@@ -185,8 +186,8 @@ module.exports = function HelperAppUser(AppUser) {
   this.getCreatedAlerts = (id, next) => {
     const Alerts = AppUser.app.models.Alerts;
     Alerts.find({where: {creator: id}}, (err, alerts) => {
-      if (err) next(err);
-      next(null, alerts);
+      if (err) return next(err);
+      return next(null, alerts);
     });
   };
 
