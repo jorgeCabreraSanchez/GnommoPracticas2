@@ -1,34 +1,34 @@
 <div class="row contenedor">
   <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
     <h2>Modificar perfil</h2>
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" method="POST" enctype="multipart/form-data">
+    <form [formGroup]="appuserForm" (ngSubmit)="onSubmit()" method="POST" enctype="multipart/form-data">
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" formControlName="name" [(ngModel)]="profile.name">
+        <input type="text" class="form-control" id="name" formControlName="name" [(ngModel)]="appuser.name">
       </div>
       <div class="form-group">
         <label for="surname">Apellidos</label>
-        <input type="text" class="form-control" id="surname" formControlName="surname" [(ngModel)]="profile.surname">
+        <input type="text" class="form-control" id="surname" formControlName="surname" [(ngModel)]="appuser.surname">
       </div>
       <!--
       <div class="form-group">
         <label for="phone">Teléfono</label>
-        <input type="text" class="form-control" id="phone" formControlName="phone" [(ngModel)]="profile.phone">
+        <input type="text" class="form-control" id="phone" formControlName="phone" [(ngModel)]="appuser.phone">
       </div>
       -->
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" formControlName="email" [(ngModel)]="profile.email">
-        <p class="alert alert-danger" *ngIf="profileForm.controls.email.invalid">Email requerido</p>
+        <input type="text" class="form-control" id="email" formControlName="email" [(ngModel)]="appuser.email">
+        <p class="alert alert-danger" *ngIf="appuserForm.controls.email.invalid">Email requerido</p>
       </div>
       <div class="form-group">
         <label for="image">Imagen</label>
         <input type="file" class="form-control" id="image" formControlName="image" accept="image/*" (change)="fileChangeEvent($event)">
-        <img id="imagen" src="{{ profile.image }}" alt="No hay imagen">
+        <img id="imagen" src="{{ appuser.image }}" alt="No hay imagen">
       </div>
       <div class="buttons">
         <button class="btn btn-primary" routerLink="/perfil">Volver</button>
-        <button id="submit" class="btn btn-success" type="submit" [disabled]="!profileForm.valid || !validate">Modificar perfil</button>
+        <button id="submit" class="btn btn-success" type="submit" [disabled]="!appuserForm.valid || !validate">Modificar perfil</button>
       </div>
     </form>
   </div>

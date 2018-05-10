@@ -64,7 +64,8 @@ export class RegisterComponent implements OnInit {
             // 'username': ['', [Validators.required, Validators.minLength(6)]],
             'name': ['', [Validators.minLength(3)]],
             'surname': ['', [Validators.minLength(3)]],
-            'province': ['', [Validators.minLength(3)]],
+            'province': ['', [Validators.required]],
+            'role': ['', [Validators.required]],
             'email': ['', [Validators.required, Validators.email]],
             // tslint:disable-next-line:max-line-length
             'password': ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'), Validators.minLength(6)]],
@@ -99,6 +100,7 @@ export class RegisterComponent implements OnInit {
             surname: this.registerForm.get('surname').value,
             email: this.registerForm.get('email').value,
             province: this.registerForm.get('province').value,
+            role: this.registerForm.get('role').value,
             // phone: this.registerForm.get('phone').value,
             password: this.registerForm.get('password').value
         };

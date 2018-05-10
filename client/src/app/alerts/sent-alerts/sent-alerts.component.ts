@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../../services/authentication.service';
-import { TechnicianService } from '../../services/technician.service';
+import { AppuserService } from '../../services/appuser.service';
 
 @Component({
   selector: 'app-sent-alerts',
@@ -12,15 +12,15 @@ import { TechnicianService } from '../../services/technician.service';
 export class SentAlertsComponent implements OnInit {
 
   alerts: any = [];
-  profileId: string;
+  appuserId: string;
   alertId: string;
 
-  constructor(private technicianService: TechnicianService,
+  constructor(private appuserService: AppuserService,
     private titleService: Title,
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private authenticationService: AuthenticationService) {
-    this.technicianService.getSentAlerts(JSON.parse(localStorage.getItem('currentUser')).userId)
+    this.appuserService.getSentAlerts(JSON.parse(localStorage.getItem('currentUser')).userId)
       .subscribe(alerts => {
         this.alerts = this.alerts;
       },
@@ -34,24 +34,24 @@ export class SentAlertsComponent implements OnInit {
     this.titleService.setTitle('Alertas enviadas');
   }
 
-  delSentAlert(profileId$, AlertId$) {
-    this.technicianService.delSentAlert(profileId$, AlertId$)
+  delSentAlert(appuserId$, AlertId$) {
+    this.appuserService.delSentAlert(appuserId$, AlertId$)
       .subscribe(delalert => {
         this.alerts = [];
-        this.technicianService.getSentAlerts(this.profileId)
+        this.appuserService.getSentAlerts(this.appuserId)
           .subscribe(alerts => {
             // tslint:disable-next-line:forin no-shadowed-variable
-            for (const profileId$ in alerts) {
-              const p = alerts[profileId$];
-              p.profileId$ = profileId$;
-              this.alerts.push(alerts[profileId$]);
+            for (const appuserId$ in alerts) {
+              const p = alerts[appuserId$];
+              p.appuserId$ = appuserId$;
+              this.alerts.push(alerts[appuserId$]);
             }
           });
       });
   }
 
-  delAlerts(profileId$) {
-    this.technicianService.delSentAlerts(profileId$)
+  delAlerts(appuserId$) {
+    this.appuserService.delSentAlerts(appuserId$)
       .subscribe(delalert => {
         this.alerts = [];
       });

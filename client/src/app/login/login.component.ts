@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
-import { TechnicianService } from '../services/technician.service';
+import { AppuserService } from '../services/appuser.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService,
-    private techniciansService: TechnicianService,
+    private appuserService: AppuserService,
     private Notification: NotificationsService,
     private titleService: Title) { }
 
@@ -26,8 +26,12 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('Servicio de alertas-Iniciar sesión');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
-      if (this.techniciansService.isAuthenticated()) {
+      if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'appuser') {
         this.router.navigate(['recibidas']);
+      } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
+        this.router.navigate(['enviadas']);
+      } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
+        this.router.navigate(['usuario']);
       } else {
         this.authenticationService.logout();
         console.log('Borra el currentUser');
@@ -42,6 +46,13 @@ export class LoginComponent implements OnInit {
         data => {
           this.authenticationService.asignRole(data)
             .subscribe(resultado => {
+              if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'appuser') {
+                this.router.navigate(['recibidas']);
+              } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
+                this.router.navigate(['enviadas']);
+              } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
+                this.router.navigate(['usuario']);
+              }
               this.router.navigate(['recibidas']);
             });
         },

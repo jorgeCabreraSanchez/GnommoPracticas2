@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TechnicianService } from '../../services/technician.service';
+import { AppuserService } from '../../services/appuser.service';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
@@ -15,11 +15,11 @@ export class NewAlertComponent implements OnInit {
 
   alertForm: FormGroup;
   alert: any;
-  profileId: string;
+  appuserId: string;
   storedFiles: any = [];
 
   constructor(private pf: FormBuilder,
-    private technicianService: TechnicianService,
+    private appuserService: AppuserService,
     private router: Router,
     private notification: NotificationsService,
     private activatedRouter: ActivatedRoute,
@@ -38,9 +38,9 @@ export class NewAlertComponent implements OnInit {
   onSubmit() {
     this.alert = this.saveAlert();
     // Método para obtener el id del destinatario a partir de su email
-    this.technicianService.createAlert(this.profileId, this.alert).subscribe(newalert => {
+    this.appuserService.createAlert(this.appuserId, this.alert).subscribe(newalert => {
       if ($('#image')[0].files[0]) {
-        this.technicianService.postFiles(this.storedFiles, this.profileId).subscribe(data => {
+        this.appuserService.postFiles(this.storedFiles, this.appuserId).subscribe(data => {
           this.router.navigate(['/recibidas']);
         },
           error => {

@@ -39,9 +39,9 @@ export class AuthenticationService {
   async isAuthenticated(): Promise<boolean> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
-      const technicianId = currentUser.userId;
+      const appuserId = currentUser.userId;
       const token = currentUser.id;
-      return await this.http.get(`http://localhost:3000/api/appusers/${technicianId}/accessTokens/${token}`)
+      return await this.http.get(`http://localhost:3000/api/appusers/${appuserId}/accessTokens/${token}`)
         .map(
           (resultado: any) => {
             if (resultado && resultado.id) {

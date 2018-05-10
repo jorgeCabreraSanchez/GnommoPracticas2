@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../../services/authentication.service';
-import { TechnicianService } from '../../services/technician.service';
+import { AppuserService } from '../../services/appuser.service';
 // import * as firebase from 'firebase';
 // import '@firebase/messaging';
 
@@ -14,22 +14,22 @@ import { TechnicianService } from '../../services/technician.service';
 export class ReceivedAlertsComponent implements OnInit {
 
   alerts: any = [];
-  profile: any = [];
-  profileId: string;
+  appuser: any = [];
+  appuserId: string;
   alertId: string;
   province: string;
 
-  constructor(private technicianService: TechnicianService,
+  constructor(private appuserService: AppuserService,
     private titleService: Title,
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private authenticationService: AuthenticationService) {
-    this.technicianService.getTechnician(JSON.parse(localStorage.getItem('currentUser')).userId)
-      .subscribe(profile => {
-        this.profile = profile;
-        this.province = this.profile.province;
+    this.appuserService.getAppuser(JSON.parse(localStorage.getItem('currentUser')).userId)
+      .subscribe(appuser => {
+        this.appuser = appuser;
+        this.province = this.appuser.province;
         console.log(this.province);
-        /*setInterval(*/this.technicianService.getReceivedAlerts(this.province)
+        /*setInterval(*/this.appuserService.getReceivedAlerts(this.province)
           .subscribe(alerts => {
             this.alerts = alerts;
           },
@@ -49,62 +49,66 @@ export class ReceivedAlertsComponent implements OnInit {
     this.titleService.setTitle('Alertas recibidas');
   }
 
-  assignAlert(profileId$, alertId$) {
-    this.technicianService.assignAlert(profileId$, alertId$)
+  assignAlert(appuserId$, alertId$) {
+    this.appuserService.assignAlert(appuserId$, alertId$)
       .subscribe(delalert => {
         this.alerts = [];
-        this.technicianService.getReceivedAlerts(this.profileId)
+        this.appuserService.getReceivedAlerts(this.appuserId)
           .subscribe(alerts => {
             // tslint:disable-next-line:forin no-shadowed-variable
-            for (const profileId$ in alerts) {
-              const p = alerts[profileId$];
-              p.profileId$ = profileId$;
-              this.alerts.push(alerts[profileId$]);
+            for (const appuserId$ in alerts) {
+              const p = alerts[appuserId$];
+              p.appuserId$ = appuserId$;
+              this.alerts.push(alerts[appuserId$]);
             }
           });
       });
   }
 
-  /* unassignAlert(profileId$, alertId$) {
-    this.technicianService.unassignAlert(profileId$, alertId$)
+  /* unassignAlert(appuserId$, alertId$) {
+    this.appuserService.unassignAlert(appuserId$, alertId$)
       .subscribe(delalert => {
         this.alerts = [];
-        this.technicianService.getReceivedAlerts(this.profileId)
+        this.appuserService.getReceivedAlerts(this.appuserId)
           .subscribe(alerts => {
             // tslint:disable-next-line:forin no-shadowed-variable
-            for (const profileId$ in alerts) {
-              const p = alerts[profileId$];
-              p.profileId$ = profileId$;
-              this.alerts.push(alerts[profileId$]);
+            for (const appuserId$ in alerts) {
+              const p = alerts[appuserId$];
+              p.appuserId$ = appuserId$;
+              this.alerts.push(alerts[appuserId$]);
             }
           });
       });
   } */
 
-  delReceivedAlert(profileId$, AlertId$) {
-    this.technicianService.delReceivedAlert(profileId$, AlertId$)
+  delReceivedAlert(appuserId$, AlertId$) {
+    this.appuserService.delReceivedAlert(appuserId$, AlertId$)
       .subscribe(delalert => {
         this.alerts = [];
-        this.technicianService.getReceivedAlerts(this.profileId)
+        this.appuserService.getReceivedAlerts(this.appuserId)
           .subscribe(alerts => {
             // tslint:disable-next-line:forin no-shadowed-variable
-            for (const profileId$ in alerts) {
-              const p = alerts[profileId$];
-              p.profileId$ = profileId$;
-              this.alerts.push(alerts[profileId$]);
+            for (const appuserId$ in alerts) {
+              const p = alerts[appuserId$];
+              p.appuserId$ = appuserId$;
+              this.alerts.push(alerts[appuserId$]);
             }
           });
       });
   }
 
-  delReceivedAlerts(profileId$) {
-    this.technicianService.delReceivedAlerts(profileId$)
+  delReceivedAlerts(appuserId$) {
+    this.appuserService.delReceivedAlerts(appuserId$)
       .subscribe(delalert => {
         this.alerts = [];
       });
   }
 
   idEliminar(id) {
+    this.alertId = id;
+  }
+
+  idAsignar(id) {
     this.alertId = id;
   }
 

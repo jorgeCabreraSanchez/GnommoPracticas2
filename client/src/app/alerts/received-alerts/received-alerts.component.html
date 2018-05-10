@@ -11,7 +11,7 @@
   <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
 </p>
 <br>
-<h6 class="alert alert-danger" *ngIf="alerts.length ==0">No tienes alertas</h6>
+<h6 class="alert alert-danger" *ngIf="alerts.length ===0">No tienes alertas</h6>
 <table *ngIf="alerts.length !=0" class="table table-bordered table-striped tabla">
   <thead>
     <tr class="filters">
@@ -30,16 +30,16 @@
   <tbody>
     <tr *ngFor="let alert of alerts">
       <td *ngIf="alert.assigned==true">Sí</td>
-      <td *ngIf="alert.assigned==false" click="assignAlert(profileId, alert.id)">No</td>
+      <td *ngIf="alert.assigned==false" data-toggle="modal" data-target="#assignAlert" (click)="idAsignar(alert.id)">No</td>
       <td>{{ alert.date | date: 'dd/MM/yyyy' }}</td>
       <td *ngIf="alert.title!=''">{{ alert.title }}</td>
       <td *ngIf="alert.title==''">Sin título</td>
-      <td>{{ alert.province }}</td>
       <td *ngIf="alert.description==''">Sin descripción</td>
       <td *ngIf="alert.description!=''">{{ alert.description }}</td>
-      <td *ngIf="alert.state=='finished'" click="unassignAlert(profileId, alert.id)">Sí</td>
-      <td *ngIf="alert.state=='unfinished'" click="assignAlert(profileId, alert.id)">No</td>
-      <!--<td *ngIf="!alert.attachments">Sin adjuntos</td>-->
+      <td>{{ alert.province }}</td>
+      <td *ngIf="alert.state=='finished'">Sí</td>
+      <td *ngIf="alert.state=='unfinished'" (click)="closeAlert(appuserId, alert.id)">No</td>
+      <td *ngIf="!alert.attachments">Sin adjuntos</td>
       <td *ngFor="let attached of alert.attachments">
         <a href="{{ attached }}">{{ attached }}</a>
       </td>
@@ -53,7 +53,7 @@
 <hr>
 <!--<button class="btn btn-success" [routerLink]="['/nuevo']">Nueva alerta</button>-->
 
-<!-- Modal de eliminar un mensaje -->
+<!-- Modal de eliminar una alerta -->
 <div class="modal fade" id="deleteAlert">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -71,7 +71,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delReceivedAlert(profileId, alertId)" data-toggle="modal" data-target="#deleteAlert">
+        <button class="btn btn-danger" (click)="delReceivedAlert(appuserId, alertId)" data-toggle="modal" data-target="#deleteAlert">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -81,7 +81,7 @@
   </div>
 </div>
 
-<!--Modal de eliminar todos los mensajes -->
+<!--Modal de eliminar todas las alertas -->
 <div class="modal fade" id="deleteAllAlerts">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -99,7 +99,35 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delReceivedAlerts(profileId)" data-toggle="modal" data-target="#deleteAllAlerts">
+        <button class="btn btn-danger" (click)="delReceivedAlerts(appuserId)" data-toggle="modal" data-target="#deleteAllAlerts">
+          Confirmar
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Modal de asignar una alerta -->
+<div class="modal fade" id="assignAlert">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar acción</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        ¿Estás seguro de querer asignarte esta alerta? Esta acción no podrá deshacerse.
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="assignAlert(appuserId, alertId)" data-toggle="modal" data-target="#assignAlert">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>

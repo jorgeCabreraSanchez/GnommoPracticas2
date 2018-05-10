@@ -3,22 +3,24 @@
     <h2>Nueva alerta</h2>
     <form [formGroup]="alertForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="to">Para:</label>
-        <input type="text" class="form-control" id="to" formControlName="to">
+        <label for="to">Título:</label>
+        <input type="text" class="form-control" id="title" formControlName="title">
       </div>
       <div class="form-group">
-        <label for="subject">Asunto:</label>
+        <label for="subject">Descripción:</label>
         <input type="text" class="form-control" id="subject" formControlName="subject">
       </div>
       <div class="form-group">
-        <label for="alert">Mensaje:</label>
-        <textarea class="form-control" id="alert" formControlName="alert" rows="5"></textarea>
+        <label for="province">Provincia:</label>
+        <select id="province" class="form-control" formControlName="province">
+          <option value="madrid" selected="selected">Madrid</option>
+          <option value="barcelona">Barcelona</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="files">Archivos adjuntos:</label>
         <input type="file" class="form-control" id="files" formControlName="files" multiple="multiple" (change)="fileChangeEvent($event)">
       </div>
-
       <div class="buttons">
         <button class="btn btn-primary" routerLink="/recibidas">Volver</button>
         <button id="submit" class="btn btn-success" type="submit" [disabled]="!alertForm.valid">Enviar</button>

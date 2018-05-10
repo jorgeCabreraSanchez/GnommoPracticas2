@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLinkActive } from '@angular/router';
-
-import { TechnicianService } from '../services/technician.service';
+import { AppuserService } from '../services/appuser.service';
 
 @Component({
   selector: 'app-header',
@@ -12,23 +11,21 @@ export class HeaderComponent implements OnInit {
   role: string;
   auth: boolean;
 
-  constructor(private techniciansService: TechnicianService) {
+  constructor(private appuserService: AppuserService) {
 
   }
 
   ngOnInit() {
-    this.role = this.techniciansService.getRole();
-    this.auth = this.techniciansService.isAuthenticated();
-    console.log(this.role);
-    console.log(this.auth);
-   }
+    this.role = this.appuserService.getRole();
+    this.auth = this.appuserService.isAuthenticated();
+  }
 
   getRole() {
-    return this.techniciansService.getRole();
+    return this.appuserService.getRole();
   }
 
   isAuth() {
-    return this.techniciansService.isAuthenticated();
+    return this.appuserService.isAuthenticated();
   }
 
 }

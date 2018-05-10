@@ -29,16 +29,16 @@
   <tbody>
     <tr *ngFor="let alert of alerts">
       <td *ngIf="alert.assigned==true">Sí</td>
-      <td *ngIf="alert.assigned==false" click="assignAlert(profileId, alert.id)">No</td>
+      <td *ngIf="alert.assigned==false">No</td>
       <td>{{ alert.date | date: 'dd/MM/yyyy' }}</td>
       <td *ngIf="alert.title!=''">{{ alert.title }}</td>
       <td *ngIf="alert.title==''">Sin título</td>
-      <td>{{ alert.province }}</td>
       <td *ngIf="alert.description==''">Sin descripción</td>
       <td *ngIf="alert.description!=''">{{ alert.description }}</td>
-      <td *ngIf="alert.state=='finished'" click="unassignAlert(profileId, alert.id)">Sí</td>
-      <td *ngIf="alert.state=='unfinished'" click="assignAlert(profileId, alert.id)">No</td>
-      <!--<td *ngIf="!alert.attachments">Sin adjuntos</td>-->
+      <td>{{ alert.province }}</td>
+      <td *ngIf="alert.state=='finished'">Sí</td>
+      <td *ngIf="alert.state=='unfinished'" (click)="closeAlert(appuserId, alert.id)">No</td>
+      <td *ngIf="!alert.attachments">Sin adjuntos</td>
       <td *ngFor="let attached of alert.attachments">
         <a href="{{ attached }}">{{ attached }}</a>
       </td>
@@ -70,7 +70,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delSentAlert(profileId, alertId)" data-toggle="modal" data-target="#deleteAlert">
+        <button class="btn btn-danger" (click)="delSentAlert(appuserId, alertId)" data-toggle="modal" data-target="#deleteAlert">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -98,7 +98,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delSentAlerts(profileId)" data-toggle="modal" data-target="#deleteAllAlerts">
+        <button class="btn btn-danger" (click)="delSentAlerts(appuserId)" data-toggle="modal" data-target="#deleteAllAlerts">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -107,3 +107,4 @@
     </div>
   </div>
 </div>
+

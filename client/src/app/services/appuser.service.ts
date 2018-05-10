@@ -3,7 +3,7 @@ import { HttpEvent, HttpHeaders, HttpInterceptor, HttpHandler, HttpRequest, Http
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class TechnicianService {
+export class AppuserService {
 
   conURL = 'http://localhost:3000/api/appusers';
   currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -24,16 +24,16 @@ export class TechnicianService {
     return localStorage.getItem('currentUser') ? true : false;
   }
 
-  getTechnicians() {
+  getAppusers() {
     return this.http.get(this.conURL);
   }
 
-  getTechnician(id: string) {
+  getAppuser(id: string) {
     const url = `${this.conURL}/${id}`;
     return this.http.get(url);
   }
 
-  patchTechnician(doctor: any, id: string) {
+  patchAppuser(doctor: any, id: string) {
     const editcon = JSON.stringify(doctor);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -41,14 +41,14 @@ export class TechnicianService {
     return this.http.patch(url, editcon, { headers });
   }
 
-  postTechnician(doctor: any) {
+  postAppuser(doctor: any) {
     const newcon = JSON.stringify(doctor);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
     return this.http.post(this.conURL, newcon, { headers });
   }
 
-  delTechnician(id: string) {
+  delAppuser(id: string) {
     const url = `${this.conURL}/${id}`;
     return this.http.delete(url);
   }
@@ -67,62 +67,62 @@ export class TechnicianService {
     return this.http.post(`http://localhost:3000/api/appusers/${userId}/upload-files`, fd, { headers });
   }
 
-  createAlert(technicianId: string, alert: any) {
-    const alertURL = 'http://localhost:3000/api/appusers/' + technicianId + '/alerts';
+  createAlert(appuserId: string, alert: any) {
+    const alertURL = 'http://localhost:3000/api/appusers/' + appuserId + '/alerts';
     const newalert = JSON.stringify(alert);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(alertURL, newalert, { headers });
   }
 
-  assignAlert(technicianId: string, alertId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + 'assign-alert/' + alertId;
+  assignAlert(appuserId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + this.currentUser.userId + '/assign-alert/' + alertId;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(url, { headers });
   }
 
   getReceivedAlerts(province: string) {
-    // const url = 'http://localhost:3000/api/appusers/' + technicianId + '/received-alerts';
+    // const url = 'http://localhost:3000/api/appusers/' + appuserId + '/received-alerts';
     const url = 'http://localhost:3000/api/appusers/' + this.currentUser.userId + '/get-alerts-by-owner-province';
     return this.http.get(url);
   }
 
-  delReceivedAlerts(technicianId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/received-alerts';
+  delReceivedAlerts(appuserId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/received-alerts';
     return this.http.delete(url);
   }
 
-  delReceivedAlert(technicianId: string, alertId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/received-alerts/' + alertId;
+  delReceivedAlert(appuserId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/received-alerts/' + alertId;
     return this.http.delete(url);
   }
 
-  getReceivedAlert(technicianId: string, alertId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/received-alerts/' + alertId;
+  getReceivedAlert(appuserId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/received-alerts/' + alertId;
     return this.http.get(url);
   }
 
-  getSentAlerts(technicianId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/sent-alerts';
+  getSentAlerts(appuserId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/sent-alerts';
     return this.http.get(url);
   }
 
-  delSentAlerts(technicianId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/sent-alerts';
+  delSentAlerts(appuserId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/sent-alerts';
     return this.http.delete(url);
   }
 
-  delSentAlert(technicianId: string, alertId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/sent-alerts/' + alertId;
+  delSentAlert(appuserId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/sent-alerts/' + alertId;
     return this.http.delete(url);
   }
 
-  getSentAlert(technicianId: string, alertId: string) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/sent-alerts/' + alertId;
+  getSentAlert(appuserId: string, alertId: string) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/sent-alerts/' + alertId;
     return this.http.get(url);
   }
 
-  /* editAlert(technicianId: string, alertId: string, alert: any) {
-    const url = 'http://localhost:3000/api/appusers/' + technicianId + '/alerts/' + alertId;
+  /* editAlert(appuserId: string, alertId: string, alert: any) {
+    const url = 'http://localhost:3000/api/appusers/' + appuserId + '/alerts/' + alertId;
     const editalert = JSON.stringify(alert);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.put(url, editalert, { headers });

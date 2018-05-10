@@ -19,19 +19,19 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let profile of profiles">
-      <td>{{ profile.name }}</td>
-      <td>{{ profile.surname }}</td>
-      <td>{{ profile.phone }}</td>
-      <td>{{ profile.email }}</td>
+    <tr *ngFor="let appuser of appusers">
+      <td>{{ appuser.name }}</td>
+      <td>{{ appuser.surname }}</td>
+      <td>{{ appuser.phone }}</td>
+      <td>{{ appuser.email }}</td>
       <td>
-        <img src="{{ profile.image }}" alt="No hay imagen" height="42" width="80">
+        <img src="{{ appuser.image }}" alt="No hay imagen" height="42" width="80">
       </td>
       <td>
-        <button class="btn btn-success" routerLink="/tecnico/{{ profile.id }}/editar">
+        <button class="btn btn-success" routerLink="/tecnico/{{ appuser.id }}/editar">
           <fa name="edit"></fa>
         </button>
-        <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="idEliminar(profile.id)">
+        <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="idEliminar(appuser.id)">
           <fa name="trash"></fa>
         </button>
       </td>
@@ -57,7 +57,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-danger" (click)="delProfile(profileId,$event)" data-toggle="modal" data-target="#myModal">
+        <button class="btn btn-danger" (click)="delAppuser(appuserId,$event)" data-toggle="modal" data-target="#myModal">
           Confirmar
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
