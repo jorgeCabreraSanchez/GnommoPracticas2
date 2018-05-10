@@ -2,11 +2,8 @@
 
 module.exports = function(app) {
   var AppUser = app.models.AppUser;
-  var HospitalUser = app.models.HospitalUser;
-  var Technician = app.models.Technician;
   var Role = app.models.Role;
   var RoleMapping = app.models.RoleMapping;
-  var AccesToken = app.models.AccessToken;
 
   AppUser.count({}, function(err, count) {
         // A: The datastore produced an error! Pass error to callback
