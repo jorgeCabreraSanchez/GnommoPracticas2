@@ -121,13 +121,22 @@ module.exports = function HelperAppUser(AppUser) {
     });
   };
 
-  this.getAlertsByOwnerProvince = (id, next) => {
+  this.getAlertsByOwnerProvince = (id, req, next) => {
     const {Alert} = AppUser.app.models;
-    AppUser.findById(id, function(err, appUserInstance) {
-      if (err) return next(err);
-      Alert.find({where: {'province': appUserInstance.province}}, function(err, alerts) {
+    const AccessToken = Alert.app.models.AccessToken;
+    AccessToken.findById(req.query.access_token, function(err, accessInstance) {
+      AppUser.getRolesById(accessInstance.userId, (err, role) => {
         if (err) return next(err);
-        return next(null, alerts);
+        if (role.name == 'hospitalUser') {
+          return next(new Error('hospitalUser just can\'t take his created alerts'));
+        }
+        AppUser.findById(id, function(err, appUserInstance) {
+          if (err) return next(err);
+          Alert.find({where: {'province': appUserInstance.province}}, function(err, alerts) {
+            if (err) return next(err);
+            return next(null, alerts);
+          });
+        });
       });
     });
   };
@@ -165,27 +174,27 @@ module.exports = function HelperAppUser(AppUser) {
       if (err) return next(err);
       RoleMappingModel.deleteById(roleMapping.id, (err, roleMappingDelete) => {
         if (err) return next(err);
-        return next(null, roleMappingDelete);
-      });
-    }); // COMPROBAR ESTO
-
-    RoleModel.findOne({where: {name: role}}, (err, role) => {
-      if (err) return next(err);
-      role.principals.create({
-        principalType: RoleMappingModel.USER,
-        principalId: id,
-        roleId: role.id,
-      }, function(err, principal) {
-        if (err) return next(err);
-        console.log(`Assigned user ${id} to role:`, role.name);
-        return next(null, true);
+        //
+        RoleModel.findOne({where: {name: role}}, (err, role) => {
+          if (err) return next(err);
+          role.principals.create({
+            principalType: RoleMappingModel.USER,
+            principalId: id,
+            roleId: role.id,
+          }, function(err, principal) {
+            if (err) return next(err);
+            console.log(`Assigned user ${id} to role:`, role.name);
+            return next(null, true);
+          });
+        });
+        //
       });
     });
   };
 
-  this.getCreatedAlerts = (id, next) => {
-    const Alerts = AppUser.app.models.Alerts;
-    Alerts.find({where: {creator: id}}, (err, alerts) => {
+  this.getCreatedAlerts = (id, req, next) => {
+    const Alert = AppUser.app.models.Alert;
+    Alert.find({where: {creator: id}}, (err, alerts) => {
       if (err) return next(err);
       return next(null, alerts);
     });

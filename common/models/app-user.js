@@ -42,7 +42,10 @@ module.exports = function(AppUser) {
 
     http: {path: '/:id/get-alerts-by-owner-province'},
 
-    accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
+    accepts: [
+      {arg: 'id', type: 'string', http: {source: 'path'}},
+      {arg: 'req', type: 'object', http: {source: 'req'}},
+    ],
 
     returns: {arg: 'response', type: 'object', root: true},
 
@@ -90,7 +93,7 @@ module.exports = function(AppUser) {
 
     accepts: [
       {arg: 'id', type: 'string', http: {source: 'path'}},
-      {arg: 'role', type: 'enum', values: ['admin', 'hospitalUser', 'technician'],
+      {arg: 'role', type: 'string', enum: ['admin', 'hospitalUser', 'technician'], required: true,
         http: {source: 'query'}},
     ],
 

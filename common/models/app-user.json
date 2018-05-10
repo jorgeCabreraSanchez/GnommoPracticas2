@@ -54,7 +54,7 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": ["getRolesById", "assignAlert", "__findById__accessTokens"]
+      "property": ["getRolesById", "assignAlert", "__findById__accessTokens","getAlertsByOwnerProvince","getCreatedAlerts"]
     },
     {
       "accessType": "*",
@@ -68,14 +68,7 @@
       "principalType": "ROLE",
       "principalId": "hospitalUser",
       "permission": "ALLOW",
-      "property": ["generateNotificationForProvince", "getCreatedAlerts"]
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "technician",
-      "permission": "ALLOW",
-      "property": "getAlertsByOwnerProvince"
+      "property": "generateNotificationForProvince"
     }
   ],
   "methods": {}

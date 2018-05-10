@@ -19,13 +19,13 @@ module.exports = function HelperAlert(Alert) {
       Alert.findById(id, function(err, alertInstance) {
         if (err) next(err);
         if (alertInstance.state == 'unfinished') {
-          next(new Error('You can\'t close an alert that is not finished'));
+          return next(new Error('You can\'t close an alert that is not finished'));
         }
         if (alertInstance.state == 'closed') {
-          next(new Error('You can\'t close an alert that is already closed'));
+          return next(new Error('You can\'t close an alert that is already closed'));
         }
         if (accessInstance.userId != alertInstance.owner) {
-          next(new Error('You can\'t close the alert of another technician'));
+          return next(new Error('You can\'t close the alert of another technician'));
         }
         alertInstance.state = 'closed';
         alertInstance.note = note;
@@ -36,48 +36,23 @@ module.exports = function HelperAlert(Alert) {
 
   this.patchAttributes = (ctx, next) => {
     const AppUser = Alert.app.models.AppUser;
-    if (ctx.args.data.province) {
-      ctx.args.data.province = ctx.args.data.province.charAt(0).toUpperCase().concat(ctx.args.data.province.substring(1));
-      if (provinces.includes(ctx.args.data.province)) {
-        next(new Error('Province not exists'));
-      }
-    }
-    if (ctx.args.data.hasOwnProperty('assigned')) {
-      if (ctx.args.data.assigned) {
-        if (!ctx.args.data.owner && !ctx.instance.owner) {
-          next(new Error('If assigned is true, must have an owner'));
-        }
-        if (ctx.args.data.owner) {
-          AppUser.getRolesById(ctx.args.data.owner.id, (err, role) => {
-            if (err) next(err);
-            if (role != 'technician') {
-              next(new Error('Owner just can be a technician'));
-            }
-          });
-        }
-      } else {
-        if (ctx.args.data.owner || ctx.instance.owner) {
-          next(new Error('Can\'t put assign false having a owner'));
-        }
-      }
-    }
+    const alertChanges = ctx.args.data;
+    const alertBeforeChange = ctx.instance;
 
-    if (ctx.args.data.state) {
-      if (ctx.args.data.state == 'closed' || ctx.args.data.state == 'finished') {
-        if ((!ctx.args.data.owner || !ctx.instance.owner) && ctx.instance.assigned) {
-          next(new Error('You can\'t set state closed/finished without having owner and assigned true'));
-        }
-      }
-    }
-    if (ctx.args.data.creator) {
-      AppUser.getRolesById(ctx.args.data.creator, (err, role) => {
-        if (err) next(err);
-        if (role == 'technician') {
-          next(new Error('Creator can\'t be a technician'));
-        }
-      });
-    }
-    next(null, true);
+    // It has to exists in array provinces
+    validateProvince(alertChanges);
+    
+    // If assigned is true, there must be owner
+    // If assigned is false, there musn't be a owner
+    checkAssignedOwner(alertChanges, alertBeforeChange, AppUser);
+
+    // Can't change alert to state finished or closed if it don't have owner
+    checkState(alertChanges, alertBeforeChange);
+
+    // Creator can't be a technician
+    checkCreator(alertChanges, AppUser);
+
+    return next(null, true);
   };
 
   this.sendNotification = (alertInstance, next) => {
@@ -104,13 +79,71 @@ module.exports = function HelperAlert(Alert) {
     firebaseApp.messaging().sendToTopic(topic, payload, options)
     .then(function(response) {
       console.log('Successfully sent message:', response);
-      next(null, response);
+      return next(null, response);
       // alertInstance.save(next);
     })
     .catch(function(err) {
       console.log('Error sending message:', err);
-      next(err);
+      return next(err);
     });
   };
 };
 
+function validateProvince(alertChanges) {
+  return new Promise((resolve, reject) => {
+    if (alertChanges.province) {
+      alertChanges.province = alertChanges.province.charAt(0).toUpperCase().concat(alertChanges.province.substring(1));
+      if (!this.provinces.includes(alertChanges.province)) {
+        reject(new Error('Province not exists'));
+      }
+    }
+    resolve(true);
+  });
+}
+
+function checkAssignedOwner(alertChanges, alertBeforeChange, AppUser) {  
+  if (alertChanges.hasOwnProperty('assigned')) {
+    if (alertChanges.assigned) {
+      if (!alertChanges.owner && !alertBeforeChange.owner) {
+        return next(new Error('If assigned is true, must have an owner'));
+      }
+      if (alertChanges.owner) {
+        AppUser.getRolesById(alertChanges.owner.id, (err, role) => {
+          if (err) return next(err);
+          if (role != 'technician') {
+            return next(new Error('Owner just can be a technician'));
+          }
+        });
+      }
+    } else {
+      if (alertChanges.owner || alertBeforeChange.owner) {
+        return next(new Error('Can\'t put assign false having a owner'));
+      }
+    }
+  } else {
+    if (alertChanges.owner) {
+      return next(new Error('Can\'t assign owner without set assign true'));
+    }
+  }  
+}
+
+function checkState(alertChanges, alertBeforeChange) {
+  if (alertChanges.state) {
+    if (alertChanges.state == 'closed' || alertChanges.state == 'finished') {
+      if ((!alertChanges.owner || !alertBeforeChange.owner)) {
+        return next(new Error('You can\'t set state closed/finished without having owner'));
+      }
+    }
+  }
+}
+
+function checkCreator(alertChanges, AppUser) {
+  if (alertChanges.creator) {
+    AppUser.getRolesById(alertChanges.creator, (err, role) => {
+      if (err) next(err);
+      if (role.name == 'technician') {
+        return next(new Error('Creator can\'t be a technician'));
+      }
+    });
+  }
+}
