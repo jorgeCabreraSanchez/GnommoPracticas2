@@ -29,7 +29,7 @@
     "host": "192.168.1.36",
     "port": 27017,
     "url": "",
-    "database": "hospital",
+    "database": "alertru",
     "password": "",
     "name": "mongo",
     "user": "",

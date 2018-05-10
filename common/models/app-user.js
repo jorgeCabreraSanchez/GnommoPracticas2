@@ -6,14 +6,11 @@ module.exports = function(AppUser) {
 
   const helperAppUser = new HelperAppUser(AppUser);
 
+  AppUser.validatesFormatOf('username', {with: /^[a-zA-Z0-9_.-]*$/, message: 'Must provide a valid username'});
+
   AppUser.afterRemote('create', function(context, appUserInstance, next) {
     helperAppUser.sendVerifyEmail(appUserInstance, next); // and asign normal role
   });
-
-    // AppUser.afterRemote('logout', function(context, appUserInstance, next) {
-    //   // helperAppUser.deleteAccessToken(context, appUserInstance, next);
-    //   next();
-    // });
 
   AppUser.observe('after delete', function(ctx, next) {
     helperAppUser.deleteOnCascade(ctx, next); // Delete appUserBook when this appUser is in it
@@ -45,7 +42,10 @@ module.exports = function(AppUser) {
 
     http: {path: '/:id/get-alerts-by-owner-province'},
 
-    accepts: {arg: 'id', type: 'string', http: {source: 'path'}},
+    accepts: [
+      {arg: 'id', type: 'string', http: {source: 'path'}},
+      {arg: 'req', type: 'object', http: {source: 'req'}},
+    ],
 
     returns: {arg: 'response', type: 'object', root: true},
 
@@ -77,6 +77,41 @@ module.exports = function(AppUser) {
     accepts: [
       {arg: 'province', type: 'string', http: {source: 'path'}},
       {arg: 'title', type: 'Object', http: {source: 'body'}},
+    ],
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
+
+  AppUser.assignRole = helperAppUser.assignRole;
+
+  AppUser.remoteMethod('assignRole', {
+
+    http: {verb: 'post'},
+
+    http: {path: '/:id/assignRole/:role'},
+
+    accepts: [
+      {arg: 'id', type: 'string', http: {source: 'path'}},
+      {arg: 'role', type: 'string', enum: ['admin', 'hospitalUser', 'technician'], required: true,
+        http: {source: 'query'}},
+    ],
+
+    returns: {arg: 'response', type: 'object', root: true},
+
+  });
+
+  AppUser.getCreatedAlerts = helperAppUser.getCreatedAlerts;
+
+  AppUser.remoteMethod('getCreatedAlerts', {
+
+    http: {verb: 'post'},
+
+    http: {path: '/:id/get-created-alerts'},
+
+    accepts: [
+      {arg: 'id', type: 'string', required: true, http: {source: 'path'}},
+      {arg: 'req', type: 'object', http: {source: 'req'}},
     ],
 
     returns: {arg: 'response', type: 'object', root: true},

@@ -11,21 +11,18 @@ module.exports = function(Alert) {
     ctx.args.data.date = Date.now();
     ctx.args.data.state = 'unfinished';
     ctx.args.data.assigned = false;
+    ctx.args.data.creator = ctx.args.options.accessToken.userId;
     ctx.args.data.province = ctx.args.data.province.charAt(0).toUpperCase().concat(ctx.args.data.province.substring(1));
     if (!provinces.includes(ctx.args.data.province)) next('Esa provincia no esta recogida');
     next(null, ctx.args.data);
   });
 
   Alert.afterRemote('create', function(context, alertInstance, next) {
-    // console.log(context);
     helperAlert.sendNotification(alertInstance, next);
   });
 
   Alert.beforeRemote('*.patchAttributes', function(ctx, instance, next) {
-    console.log(ctx);
-    console.log(instance);
-    console.log('Entra');
-    next(null, true);
+    helperAlert.patchAttributes(ctx, next);
   });
 
   Alert.closeAlert = helperAlert.closeAlert;
