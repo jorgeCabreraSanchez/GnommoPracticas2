@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-password-change',
@@ -38,7 +39,8 @@ export class PasswordChangeComponent implements OnInit {
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private notification: NotificationsService,
-    private titleService: Title) { }
+    private titleService: Title,
+    private location: Location) { }
 
   ngOnInit() {
     this.titleService.setTitle('Cambiar contraseña');
@@ -91,6 +93,10 @@ export class PasswordChangeComponent implements OnInit {
         }
       }
     }
+  }
+
+  cancel() {
+    this.location.back();
   }
 
 }

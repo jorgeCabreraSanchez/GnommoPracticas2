@@ -12,32 +12,33 @@ import { AppuserService } from '../services/appuser.service';
 })
 export class AppuserComponent implements OnInit {
 
-  appuser: any = [];
+  appusers: any = [];
   appuserId: string;
+  role: string;
 
   constructor(private appuserService: AppuserService,
     private titleService: Title,
     private authenticationService: AuthenticationService,
     private router: Router) {
-    const role = this.appuserService.getRole();
-    if (role === 'admin') {
+    this.role = this.appuserService.getRole();
+    if (this.role === 'admin') {
       this.titleService.setTitle('Usuarios');
       this.appuserService.getAppusers()
         .subscribe(
-          appuser => {
-            this.appuser = appuser;
+          appusers => {
+            this.appusers = appusers;
           },
           error => {
             console.log(error);
             this.logout();
           });
 
-    } else if (role === 'technician' || role === 'hospitalUser') {
+    } else if (this.role === 'technician' || this.role === 'hospitalUser') {
       this.titleService.setTitle('Perfil personal');
       this.appuserService.getAppuser(JSON.parse(localStorage.getItem('currentUser')).userId)
         .subscribe(
-          appuser => {
-            this.appuser.push(appuser);
+          appusers => {
+            this.appusers.push(appusers);
           },
           error => {
             console.log(error);
@@ -56,14 +57,14 @@ export class AppuserComponent implements OnInit {
   delAppuser(id, event: any) {
     this.appuserService.delAppuser(id)
       .subscribe(delcon => {
-        this.appuser = [];
+        this.appusers = [];
         this.appuserService.getAppusers()
-          .subscribe(appuser => {
+          .subscribe(appusers => {
             // tslint:disable-next-line:forin
-            for (const id$ in appuser) {
-              const p = appuser[id$];
+            for (const id$ in appusers) {
+              const p = appusers[id$];
               p.id$ = id$;
-              this.appuser.push(appuser[id$]);
+              this.appusers.push(appusers[id$]);
             }
           });
       });

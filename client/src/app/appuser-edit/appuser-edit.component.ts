@@ -25,12 +25,12 @@ export class AppuserEditComponent implements OnInit {
   validate = false;
   // emailValid = true;
 
-  constructor(private pf: FormBuilder, private appusersService: AppuserService, private router: Router,
+  constructor(private pf: FormBuilder, private appuserService: AppuserService, private router: Router,
     private activatedRouter: ActivatedRoute, private notification: NotificationsService, private titleService: Title) {
     this.activatedRouter.params
       .subscribe(parametros => {
         this.idAppuser = parametros['id'];
-        this.appusersService.getAppuser(this.idAppuser).subscribe(appuser => {
+        this.appuserService.getAppuser(this.idAppuser).subscribe(appuser => {
           // console.log(appuser);
           this.appuser = appuser;
           // this.username = this.appuser.username;
@@ -45,6 +45,9 @@ export class AppuserEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.appuserService.getRole() !== 'admin') {
+      this.router.navigate(['/']);
+    }
     this.titleService.setTitle('Modificar perfil');
     this.appuserForm = this.pf.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -57,9 +60,9 @@ export class AppuserEditComponent implements OnInit {
 
   onSubmit() {
     this.appuser = this.saveAppuser();
-    this.appusersService.patchAppuser(this.appuser, this.idAppuser).subscribe((editcon: any) => {
+    this.appuserService.patchAppuser(this.appuser, this.idAppuser).subscribe((editcon: any) => {
       if ($('#image')[0].files[0]) {
-        this.appusersService.postImage($('#image')[0].files[0], editcon.id).subscribe(data => {
+        this.appuserService.postImage($('#image')[0].files[0], editcon.id).subscribe(data => {
           this.router.navigate(['/perfil']);
         },
           error => {

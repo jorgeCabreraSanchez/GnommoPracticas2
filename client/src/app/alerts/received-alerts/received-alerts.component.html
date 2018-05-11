@@ -20,7 +20,7 @@
       <th>Título</th>
       <th style="width: 30%">Descripción</th>
       <th>Provincia</th>
-      <th style="width: 30%">Finalizada</th>
+      <th>Estado</th>
       <th>
         <fa name="paperclip"></fa>
       </th>
@@ -37,8 +37,9 @@
       <td *ngIf="alert.description==''">Sin descripción</td>
       <td *ngIf="alert.description!=''">{{ alert.description }}</td>
       <td>{{ alert.province }}</td>
-      <td *ngIf="alert.state=='finished'">Sí</td>
-      <td *ngIf="alert.state=='unfinished'" (click)="closeAlert(appuserId, alert.id)">No</td>
+      <td *ngIf="alert.state=='finished'">Finalizada</td>
+      <td *ngIf="alert.state=='unfinished'" (click)="closeAlert(appuserId, alert.id)">No finalizada</td>
+      <td *ngIf="alert.state=='closed'" (click)="closeAlert(appuserId, alert.id)">Cerrada</td>
       <td *ngIf="!alert.attachments">Sin adjuntos</td>
       <td *ngFor="let attached of alert.attachments">
         <a href="{{ attached }}">{{ attached }}</a>

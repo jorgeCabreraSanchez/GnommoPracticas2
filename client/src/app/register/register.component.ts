@@ -4,6 +4,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { Title } from '@angular/platform-browser';
+import { AppuserService } from '../services/appuser.service';
 
 @Component({
     selector: 'app-register',
@@ -56,9 +57,13 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private activatedRouter: ActivatedRoute,
         private notification: NotificationsService,
-        private titleService: Title) { }
+        private titleService: Title,
+        private appuserService: AppuserService) { }
 
     ngOnInit() {
+        if (this.appuserService.getRole() !== 'admin') {
+            this.router.navigate(['/']);
+        }
         this.titleService.setTitle('Registro');
         this.registerForm = this.formBuilder.group({
             // 'username': ['', [Validators.required, Validators.minLength(6)]],
@@ -78,6 +83,8 @@ export class RegisterComponent implements OnInit {
     onSubmit() {
         this.userdata = this.saveUserdata();
         this.authService.registerUser(this.userdata).subscribe(respuesta => {
+            console.log(respuesta);
+            this.authService.asignRole(respuesta, this.registerForm.get('role').value);
             this.notification.success('Usuario registrado con éxito', 'Verifique su email', {});
             this.router.navigate(['/']);
         }, error => {
@@ -100,7 +107,7 @@ export class RegisterComponent implements OnInit {
             surname: this.registerForm.get('surname').value,
             email: this.registerForm.get('email').value,
             province: this.registerForm.get('province').value,
-            role: this.registerForm.get('role').value,
+            // role: this.registerForm.get('role').value,
             // phone: this.registerForm.get('phone').value,
             password: this.registerForm.get('password').value
         };

@@ -1,10 +1,11 @@
-<h3>Perfil personal</h3>
+<h3 *ngIf="role == 'technician' || role == 'hospitalUser'">Perfil personal</h3>
+<h3 *ngIf="role == 'admin'">Listado de usuarios</h3>
 <hr>
 <p>
   <a [routerLink]="['']" (click)="logout()">Cerrar sesión</a>
 </p>
 <p>
-  <a [routerLink]="['/cambiar-contraseña']">Cambiar contraseña</a>
+  <a [routerLink]="['/cambiar-contrasena']">Cambiar contraseña</a>
 </p>
 <br>
 <table class="table table-bordered table-striped tabla">
@@ -12,23 +13,23 @@
     <tr class="filters">
       <th>Nombre</th>
       <th>Apellidos</th>
-      <th>Teléfono</th>
+      <th>Provincia</th>
       <th>Email</th>
       <th>Imagen</th>
-      <th>Administrar</th>
+      <th *ngIf="role == 'admin'">Administrar</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let appuser of appusers">
       <td>{{ appuser.name }}</td>
       <td>{{ appuser.surname }}</td>
-      <td>{{ appuser.phone }}</td>
+      <td>{{ appuser.province }}</td>
       <td>{{ appuser.email }}</td>
       <td>
         <img src="{{ appuser.image }}" alt="No hay imagen" height="42" width="80">
       </td>
-      <td>
-        <button class="btn btn-success" routerLink="/tecnico/{{ appuser.id }}/editar">
+      <td *ngIf="role == 'admin'">
+        <button class="btn btn-success" routerLink="/usuario/{{ appuser.id }}/editar">
           <fa name="edit"></fa>
         </button>
         <button class="btn btn-danger" data-toggle="modal" data-target="#myModal" (click)="idEliminar(appuser.id)">

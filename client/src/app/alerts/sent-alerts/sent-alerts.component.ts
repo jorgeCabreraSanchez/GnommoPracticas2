@@ -31,6 +31,9 @@ export class SentAlertsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.appuserService.getRole() !== 'admin' && this.appuserService.getRole() !== 'hospitalUser') {
+      this.router.navigate(['/']);
+    }
     this.titleService.setTitle('Alertas enviadas');
   }
 

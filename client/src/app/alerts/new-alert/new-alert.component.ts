@@ -26,11 +26,14 @@ export class NewAlertComponent implements OnInit {
     private titleService: Title) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Nuevo mensaje');
+    if (this.appuserService.getRole() !== 'admin' && this.appuserService.getRole() !== 'hospitalUser') {
+      this.router.navigate(['/']);
+    }
+    this.titleService.setTitle('Nueva alerta');
     this.alertForm = this.pf.group({
-      to: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required, Validators.minLength(3)]],
-      alert: ['', [Validators.required, Validators.minLength(3)]],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(3)]],
+      province: ['Madrid', [Validators.required]],
       files: []
     });
   }

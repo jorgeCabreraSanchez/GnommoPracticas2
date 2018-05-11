@@ -6,7 +6,7 @@ module.exports = function(AppUser) {
 
   const helperAppUser = new HelperAppUser(AppUser);
 
-  AppUser.validatesFormatOf('username', {with: /^[a-zA-Z0-9_.-]*$/, message: 'Must provide a valid username'});
+  // Solamente tengo email  // AppUser.validatesFormatOf('username', {with: /^[a-zA-Z0-9_.-]*$/, message: 'Must provide a valid username'});
 
   AppUser.afterRemote('create', function(context, appUserInstance, next) {
     helperAppUser.sendVerifyEmail(appUserInstance, next); // and asign normal role

@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
 
   model: any = {};
   loading = false;
-  returnUrl: string;
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService,
@@ -23,15 +22,18 @@ export class LoginComponent implements OnInit {
     private titleService: Title) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Servicio de alertas-Iniciar sesión');
+    this.titleService.setTitle('Alertru-Iniciar sesión');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
-      if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'appuser') {
+      console.log(this.appuserService.getRole());
+      console.log(this.appuserService.isAuthenticated());
+
+      if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'technician') {
         this.router.navigate(['recibidas']);
-      } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
+      } else if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
         this.router.navigate(['enviadas']);
-      } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
-        this.router.navigate(['usuario']);
+      } else if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
+        this.router.navigate(['usuarios']);
       } else {
         this.authenticationService.logout();
         console.log('Borra el currentUser');
@@ -44,16 +46,16 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.model.email, this.model.password)
       .subscribe(
         data => {
-          this.authenticationService.asignRole(data)
+          this.authenticationService.getRole(data)
             .subscribe(resultado => {
               if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'appuser') {
                 this.router.navigate(['recibidas']);
-              } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
+              } else if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'hospitalUser') {
                 this.router.navigate(['enviadas']);
-              } if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
-                this.router.navigate(['usuario']);
+              } else if (this.appuserService.isAuthenticated() && this.appuserService.getRole() === 'admin') {
+                this.router.navigate(['usuarios']);
               }
-              this.router.navigate(['recibidas']);
+              // this.router.navigate(['recibidas']);
             });
         },
         error => {

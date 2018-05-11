@@ -70,7 +70,6 @@ const routes: Routes = [
     FormsModule,
     AngularFontAwesomeModule,
     BsDropdownModule.forRoot(),
-    // PushNotificationModule.forRoot(/* Default settings here, interface PushNotificationSettings */)
   ],
   exports: [
     BsDropdownModule,

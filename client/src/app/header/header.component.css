@@ -38,3 +38,11 @@ h3.navbar-title {
 li.active {
     font-weight: 700;
 }
+
+h2 {
+margin: auto;
+}
+
+img {
+float: left;
+}

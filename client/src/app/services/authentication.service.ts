@@ -7,12 +7,19 @@ import 'rxjs/add/operator/map';
 export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
-  asignRole(user) {
+  asignRole(user, role) {
+    const userId = user.userId;
+    // const params = new HttpParams().set('access_token', user.id);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/api/appusers/' + userId + '/asignrole/{role}?role=' + role, { headers });
+
+  }
+
+  getRole(user) {
     if (user && user.id) {
       // login successful if there's a jwt token in the response
       const userId = user.userId;
       const params = new HttpParams().set('access_token', user.id);
-
       // Ponemos el access_token aquí porque el currentUser.id del interceptor aún no esta asignado (setItem)
       // Aun no esta asignado porque primero le voy a añadir el role
       return this.http.get(`http://localhost:3000/api/appusers/${userId}/get-roles-by-id`, { params: params })
@@ -95,7 +102,7 @@ export class AuthenticationService {
   changePassword(Passwords: any) {
     // console.log(JSON.parse(localStorage.getItem('currentUser')).id);
     // tslint:disable-next-line:max-line-length
-    const passwordURL = 'http://localhost:3000/api/appusers/change-password?access_token=' + JSON.parse(localStorage.getItem('currentUser')).id;
+    const passwordURL = 'http://localhost:3000/api/appusers/change-password?' + JSON.parse(localStorage.getItem('currentUser')).id;
     // console.log(passwordURL);
     const password = Passwords;
     // console.log(password);
