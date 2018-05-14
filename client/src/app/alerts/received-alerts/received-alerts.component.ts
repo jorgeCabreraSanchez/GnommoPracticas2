@@ -47,6 +47,9 @@ export class ReceivedAlertsComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Alertas recibidas');
+    if (this.appuserService.getRole() !== 'technician') {
+      this.router.navigate(['/']);
+    }
   }
 
   assignAlert(appuserId$, alertId$) {

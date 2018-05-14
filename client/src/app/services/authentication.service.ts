@@ -7,12 +7,10 @@ import 'rxjs/add/operator/map';
 export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
-  asignRole(user, role) {
-    const userId = user.userId;
-    // const params = new HttpParams().set('access_token', user.id);
+  assignRole(user, role) {
+    const userId = user.id;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/api/appusers/' + userId + '/asignrole/{role}?role=' + role, { headers });
-
+    return this.http.post('http://localhost:3000/api/appusers/' + userId + '/assignrole/{role}?role=' + role, { headers });
   }
 
   getRole(user) {

@@ -69,8 +69,8 @@ export class RegisterComponent implements OnInit {
             // 'username': ['', [Validators.required, Validators.minLength(6)]],
             'name': ['', [Validators.minLength(3)]],
             'surname': ['', [Validators.minLength(3)]],
-            'province': ['', [Validators.required]],
-            'role': ['', [Validators.required]],
+            'province': ['Madrid', [Validators.required]],
+            'role': ['admin', [Validators.required]],
             'email': ['', [Validators.required, Validators.email]],
             // tslint:disable-next-line:max-line-length
             'password': ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'), Validators.minLength(6)]],
@@ -83,8 +83,12 @@ export class RegisterComponent implements OnInit {
     onSubmit() {
         this.userdata = this.saveUserdata();
         this.authService.registerUser(this.userdata).subscribe(respuesta => {
-            console.log(respuesta);
-            this.authService.asignRole(respuesta, this.registerForm.get('role').value);
+            this.authService.assignRole(respuesta, this.registerForm.get('role').value)
+                .subscribe(respuesta2 => {
+                }, error => {
+                    const mensaje = 'No se ha podido asignar el rol';
+                    this.notification.error('Error al asignar el rol', mensaje, {});
+                });
             this.notification.success('Usuario registrado con éxito', 'Verifique su email', {});
             this.router.navigate(['/']);
         }, error => {

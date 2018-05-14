@@ -42,13 +42,13 @@ export class NewAlertComponent implements OnInit {
     this.alert = this.saveAlert();
     // Método para obtener el id del destinatario a partir de su email
     this.appuserService.createAlert(this.appuserId, this.alert).subscribe(newalert => {
-      if ($('#image')[0].files[0]) {
+      if ($('#files')[0].files[0]) {
         this.appuserService.postFiles(this.storedFiles, this.appuserId).subscribe(data => {
-          this.router.navigate(['/recibidas']);
+          this.router.navigate(['/enviadas']);
         },
           error => {
             console.log(error);
-            this.router.navigate(['/recibidas']);
+            this.router.navigate(['/enviadas']);
             this.notification.error('Error al subir los archivos', '', {
               showProgressBar: true,
               pauseOnHover: false,
@@ -57,10 +57,10 @@ export class NewAlertComponent implements OnInit {
             });
           });
       } else {
-        this.router.navigate(['/recibidas']);
+        this.router.navigate(['/enviadas']);
       }
 
-      this.router.navigate(['recibidas']);
+      this.router.navigate(['/enviadas']);
       this.notification.success('Alerta enviada con éxito', '', {
         showProgressBar: true,
         pauseOnHover: false,
@@ -81,9 +81,9 @@ export class NewAlertComponent implements OnInit {
 
   saveAlert() {
     const saveAlert = {
-      to: this.alertForm.get('to').value,
-      subject: this.alertForm.get('subject').value,
-      alert: this.alertForm.get('alert').value
+      title: this.alertForm.get('title').value,
+      description: this.alertForm.get('description').value,
+      province: this.alertForm.get('province').value
     };
     return saveAlert;
   }
@@ -131,7 +131,6 @@ export class NewAlertComponent implements OnInit {
         };
       })(file);
       readFile.readAsDataURL(file);
-
       const self = this;
 
       $('#preview').on('click', '.delete_image', function () {

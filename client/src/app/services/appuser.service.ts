@@ -102,7 +102,8 @@ export class AppuserService {
   }
 
   getSentAlerts(appuserId: string) {
-    const url = 'http://localhost:3000/api/alerts/';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const url = 'http://localhost:3000/api/appusers/' + currentUser.userId + '/get-created-alerts';
     return this.http.get(url);
   }
 

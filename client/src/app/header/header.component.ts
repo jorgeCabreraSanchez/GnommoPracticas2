@@ -8,16 +8,18 @@ import { AppuserService } from '../services/appuser.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  role: string;
-  auth: boolean;
+  // role: string;
+  // auth: boolean;
 
   constructor(private appuserService: AppuserService) {
 
   }
 
   ngOnInit() {
-    this.role = this.appuserService.getRole();
-    this.auth = this.appuserService.isAuthenticated();
+   /*  this.auth = this.appuserService.isAuthenticated();
+    if (this.auth) {
+      this.role = this.appuserService.getRole();
+    } */
   }
 
   getRole() {

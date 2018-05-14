@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="navbar-items-container">
-    <h2 align="center">Alertru <img src="assets/email-icon.png" height="30" width="30">
+    <h2 align="center">Alertru
+      <img src="assets/email-icon.png" height="30" width="30">
     </h2>
   </div>
 </nav>
@@ -12,22 +13,25 @@
     </button>
     <div class="navbar-items collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav" *ngIf="isAuth()">
-        <li *ngIf="role =='technician'" class="nav-item" routerLinkActive="active">
+        <li *ngIf="getRole() =='technician'" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/recibidas">Alertas recibidas</a>
         </li>
-        <li *ngIf="role == 'hospitalUser' || role == 'admin'" class="nav-item" routerLinkActive="active">
+        <li *ngIf="getRole() == 'hospitalUser' || getRole() == 'admin'" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/enviadas">Alertas enviadas</a>
         </li>
-        <li *ngIf="role == 'hospitalUser' || role == 'technician'" class="nav-item" routerLinkActive="active">
+        <li *ngIf="getRole() == 'hospitalUser' || getRole() == 'technician'" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/usuario">Perfil personal</a>
         </li>
-        <li *ngIf="role == 'admin'" class="nav-item" routerLinkActive="active">
+        <li *ngIf="getRole() == 'admin'" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/usuarios">Usuarios</a>
         </li>
-        <li *ngIf="role =='admin'" class="nav-item" routerLinkActive="active">
+        <li *ngIf="getRole() =='admin'" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/registro">Registrar usuario</a>
         </li>
       </ul>
     </div>
+    <p *ngIf="getRole() == 'technician'">Técnico</p>
+    <p *ngIf="getRole() == 'hospitalUser'">Hospital</p>
+    <p *ngIf="getRole() == 'admin'">Admin</p>
   </div>
 </nav>

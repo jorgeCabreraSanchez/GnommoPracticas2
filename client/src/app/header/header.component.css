@@ -46,3 +46,7 @@ margin: auto;
 img {
 float: left;
 }
+
+p {
+    font-size: 20px;
+}

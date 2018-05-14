@@ -3,16 +3,16 @@
     <h2>Nueva alerta</h2>
     <form [formGroup]="alertForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="to">Título:</label>
+        <label for="title">Título:</label>
         <input type="text" class="form-control" id="title" formControlName="title">
       </div>
       <div class="form-group">
         <label for="description">Descripción:</label>
-        <input type="text" class="form-control" id="description" formControlName="description">
+        <textarea class="form-control" id="description" formControlName="description"></textarea>
       </div>
       <div class="form-group">
         <label for="province">Provincia:</label>
-        <select class="bootstrap-select" id="province" class="form-control" formControlName="province">
+        <select id="province" class="form-control" formControlName="province">
           <option value="Madrid" selected="selected">Madrid</option>
           <option value="Barcelona">Barcelona</option>
         </select>
